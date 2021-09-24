@@ -1,4 +1,5 @@
 //Andrew Nguyen
+
 /* 
 Step 1: implement maze
 Step 2: create coins 
