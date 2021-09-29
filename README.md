@@ -1,9 +1,8 @@
-# group3_pacman_f21
-CMPS 3350 - Group 3 PacMan
+# CMPS 3350 - Group 3 PacMan
 
-Dominic Fanucchi | Kenneth Wood | Juan Sierra Diaz | Andrew Nguyen
+### Dominic Fanucchi | Kenneth Wood | Juan Sierra Diaz | Andrew Nguyen
 
-Overview:
+#### Overview:
 An individual player is assigned a character known as Pac-Man, who is a brave spirit,
 seeking to gather all the gold coins that lie in the forbidden labyrinth of the kingdom. In
 order to purchase food to end the famine, that terrorizes his village. The eponymous
@@ -13,17 +12,17 @@ Can Pac-Man collect all the priceless treasures in time before the aliens captur
 can he escape with the items that he was searching for in time? Let the advantage
 begin.
 
-Technical Requirements:
+#### Technical Requirements:
 - Programming language: C++
 - Graphical program: XQuartx, OpenGL, or X Windows
 
-Product Features:
+#### Product Features:
 - 2 Diminsension Graphical Game
 - Art
 - Sound effects
 - Prioritizing user experience, in order for them to continue to play the game
 
-Overall Objectives:
+#### Overall Objectives:
 - Utilizing the left, right, up and down arrow keys, in odred for Pac-Man to escape the
 aliens within the maze
 - Designing a labyrinth, enclosing Pac-Man, the aliens, as well as the treasures
@@ -35,7 +34,7 @@ advantage).
 - Block Pac-Man when he comes across a wall, not allowing him to move over wall(s)
 within the maze
 
-Stretch Goals:
+#### Stretch Goals:
 - Developing varys levels of the labyrinth as the character completes previous phases of
 the game, increasing the level of difficulty. To make it more challenging for the player
 - Letting the user customize the character, changing the game theme.
@@ -49,7 +48,7 @@ exit the game
 - Give an option for the player to choose between dark or light mode, in order to avoid
 them straining their eye from excessive hours of playing
 
-Division of Labor:
+#### Division of Labor:
 - Dominic Fanucchi’s assigned role(s): (9/22 Status: to be decided)
 I.
 II.
@@ -63,4 +62,5 @@ II
 I.
 II.
 
-Coding Standards:
+#### Coding Standards:
+Cominig Soon!
