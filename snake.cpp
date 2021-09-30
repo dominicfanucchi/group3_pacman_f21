@@ -161,6 +161,7 @@ struct Global {
 	int boardDim;
 	int gameover;
 	int winner;
+    int show_credits;
 	Image *marbleImage;
 	GLuint marbleTexture;
 	Button button[MAXBUTTONS];
@@ -176,7 +177,7 @@ struct Global {
 		winner = 0;
 		nbuttons = 0;
 		marbleImage=NULL;
-        show_credits();
+        show_credits = 0;
 	}
 } g;
 
@@ -590,7 +591,7 @@ int checkKeys(XEvent *e)
 			g.snake.direction = DIRECTION_DOWN;
 			break;
         case XK_c:
-            g.show_credits();    
+            g.show_credits = 1;   
 	}
 	return 0;
 }
@@ -787,6 +788,13 @@ void render(void)
 	int b2 = g.boardDim/2;
 	int s0 = g.xres>>1;
 	int s1 = g.yres>>1;
+
+    if (g.show_credits){
+        r.bot = g.yres -20;
+        r.left = 10;
+        r.center = 0;
+        ggprint8b(&r, 16, 0x00A020F0, "asdasdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    }
 	//center of a grid
 	int cent[2];
 	//bq is the width of one grid section
