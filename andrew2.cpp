@@ -1,8 +1,13 @@
 //Andrew Nguyen
 
-/* 
-Step 1: implement maze
-Step 2: create coins 
-Step 3: create pac-man
-Step 4: create alines 
-*/
+#include "fonts.h"
+
+void show_andrew_credits(int x, int y)
+{
+    Rect r;
+    r.bot = y;
+    r.left = x;
+    r.center = 1;
+
+    ggprint8b(&r, 16, 0x00ff0000, "Andrew");
+}
