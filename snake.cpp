@@ -789,12 +789,7 @@ void render(void)
 	int s0 = g.xres>>1;
 	int s1 = g.yres>>1;
 
-    if (g.show_credits){
-        r.bot = g.yres -20;
-        r.left = 10;
-        r.center = 0;
-        ggprint8b(&r, 16, 0x00A020F0, "asdasdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-    }
+    
 	//center of a grid
 	int cent[2];
 	//bq is the width of one grid section
@@ -940,7 +935,18 @@ void render(void)
 	r.left   = g.xres/2;
 	r.bot    = g.yres-100;
 	r.center = 1;
-	ggprint16(&r, 16, 0x00ffffff, "Snake");
+	ggprint16(&r, 16, 0x00ffffff, "Snake \n (press c for credits)");
+
+    if (g.show_credits){
+        r.bot = g.yres -20;
+        r.left = 10;
+        r.center = 0;
+        ggprint8b(&r, 16, 0x00A020F0, "Credits:");
+        ggprint8b(&r, 16, 0x00A020F0, "Kenneth");
+        ggprint8b(&r, 16, 0x00A020F0, "Andrew");
+        ggprint8b(&r, 16, 0x00A020F0, "Dominic");
+        ggprint8b(&r, 16, 0x00A020F0, "Juan");
+    }
 }
 
 
