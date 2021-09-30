@@ -777,6 +777,9 @@ void physics(void)
 		return;
 	}
 }
+void show_dominics_credits(int x, int y);
+void show_andrew_credits(int x, int y);
+void show_kenneth_credits(int x, int y);
 
 void render(void)
 {
@@ -942,9 +945,9 @@ void render(void)
         r.left = 10;
         r.center = 0;
         ggprint8b(&r, 16, 0x00A020F0, "Credits:");
-        ggprint8b(&r, 16, 0x00A020F0, "Kenneth");
-        ggprint8b(&r, 16, 0x00A020F0, "Andrew");
-        ggprint8b(&r, 16, 0x00A020F0, "Dominic");
+        show_dominics_credits(50, g.yres-50);
+        show_andrew_credits(50, g.yres-80);
+        show_kenneth_credits(50, g.yres-110);
         ggprint8b(&r, 16, 0x00A020F0, "Juan");
     }
 }
