@@ -176,6 +176,7 @@ struct Global {
 		winner = 0;
 		nbuttons = 0;
 		marbleImage=NULL;
+        show_credits();
 	}
 } g;
 
@@ -588,6 +589,8 @@ int checkKeys(XEvent *e)
 		case XK_Down:
 			g.snake.direction = DIRECTION_DOWN;
 			break;
+        case XK_c:
+            g.show_credits();    
 	}
 	return 0;
 }
