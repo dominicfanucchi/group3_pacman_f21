@@ -1,4 +1,4 @@
-//Andrew Nguyen
+//Andrew N
 
 #include "fonts.h"
 
