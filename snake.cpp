@@ -949,7 +949,7 @@ void render(void)
         show_dominics_credits(50, g.yres-50);
         show_andrew_credits(50, g.yres-80);
         show_kenneth_credits(50, g.yres-110);
-        show_juan_credits(r.left, r.bot);
+        show_juan_credits(50, g.yres-140);
 
     }
 }
