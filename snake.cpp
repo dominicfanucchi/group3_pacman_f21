@@ -780,6 +780,7 @@ void physics(void)
 void show_dominics_credits(int x, int y);
 void show_andrew_credits(int x, int y);
 void show_kenneth_credits(int x, int y);
+void show_juan_credits(int, int);
 
 void render(void)
 {
@@ -948,7 +949,8 @@ void render(void)
         show_dominics_credits(50, g.yres-50);
         show_andrew_credits(50, g.yres-80);
         show_kenneth_credits(50, g.yres-110);
-        ggprint8b(&r, 16, 0x00A020F0, "Juan");
+        show_juan_credits(50, g.yres-140);
+
     }
 }
 
