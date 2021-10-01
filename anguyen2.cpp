@@ -1,6 +1,6 @@
 /* 
 Creator: Andrew Nguyen
-file name: anguyen2.cpp 
+File name: anguyen2.cpp 
 */
 
 #include "fonts.h"
