@@ -8,7 +8,7 @@ void show_juan_credits(int x, int y){
 
         r.bot = y;
         r.left = x;
-        r.center = 0;
+        r.center = 1;
 
         ggprint8b(&r, 16, 0x00A020F0, "Juan Sierra Diaz");
 
