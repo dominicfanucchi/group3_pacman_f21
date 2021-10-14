@@ -1,4 +1,7 @@
-//Andrew Nguyen
+/* 
+Creator: Andrew Nguyen
+File name: anguyen2.cpp 
+*/
 
 #include "fonts.h"
 
