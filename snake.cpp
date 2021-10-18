@@ -53,6 +53,12 @@
 #include </usr/include/AL/alut.h>
 #endif //USE_OPENAL_SOUND
 
+//defined types
+
+typedef double Flt;
+typedef double Vec[3];
+typedef Flt     Matrix[4][4];
+
 //macros
 #define rnd() (double)rand()/(double)RAND_MAX
 
@@ -95,6 +101,65 @@ typedef struct t_button {
 	float dcolor[3];
 	unsigned int text_color;
 } Button;
+
+class Level {
+public:
+        unsigned char arr[64][90];
+        int nrows, ncols;
+        int tilesize[1];
+        Flt ftsz[2];
+        Flt tile_base;
+        Level() {
+                //Log("Level constructor\n");
+                tilesize[0] = 7;
+                tilesize[1] = 7;
+                ftsz[0] = (Flt)tilesize[0];
+                ftsz[1] = (Flt)tilesize[1];
+                tile_base = 25.0;
+                //read level
+
+                FILE *fpi = fopen("map.txt","r");
+                if (fpi) {
+                        nrows=0;
+                        char line[100];
+                        while (fgets(line, 100, fpi) != NULL) {
+                                removeCrLf(line);
+                                int slen = strlen(line);
+                                ncols = slen;
+                                //Log("line: %s\n", line);
+                                for (int j=0; j<slen; j++) {
+                                        arr[nrows][j] = line[j];
+                                }
+                                ++nrows;
+                        }
+                        fclose(fpi);
+                        //printf("nrows of background data: %i\n", nrows);
+                }
+
+                for (int i=0; i<nrows; i++) {
+                        for (int j=0; j<ncols; j++) {
+                                printf("%c", arr[i][j]);
+                        }
+                        printf("\n");
+                }
+        }
+        void removeCrLf(char *str) {
+                //remove carriage return and linefeed from a Cstring
+                char *p = str;
+                while (*p) {
+                        if (*p == 10 || *p == 13) {
+                                *p = '\0';
+                                break;
+                        }
+                        ++p;
+                }
+        }
+} lev;
+
+
+
+
+
 
 class Image {
 public:
@@ -169,6 +234,9 @@ struct Global {
 	//
 	ALuint alBufferDrip, alBufferTick;
 	ALuint alSourceDrip, alSourceTick;
+
+	Flt camera[2];	
+
 	Global() {
 		xres = 800;
 		yres = 600;
@@ -177,6 +245,7 @@ struct Global {
 		winner = 0;
 		nbuttons = 0;
 		marbleImage=NULL;
+		camera[0] = camera[1] = 0.0;
         show_credits = 0;
 	}
 } g;
@@ -857,6 +926,7 @@ void render(void)
 			ggprint16(&r, 0, g.button[i].text_color, g.button[i].text);
 		}
 	}
+	/*
 	//draw the main game board in middle of screen
 	glColor3f(0.6f, 0.5f, 0.2f);
 	glBegin(GL_QUADS);
@@ -865,6 +935,7 @@ void render(void)
 		glVertex2i(s0+b2, s1+b2);
 		glVertex2i(s0+b2, s1-b2);
 	glEnd();
+	*/
 	//
 	//grid lines...
 	int x0 = s0-b2;
@@ -940,6 +1011,54 @@ void render(void)
 	r.bot    = g.yres-100;
 	r.center = 1;
 	ggprint16(&r, 16, 0x00ffffff, "Snake \n (press c for credits)");
+
+
+
+	//========================
+        //Render the tile system
+        //========================
+        int tx = lev.tilesize[0];
+        int ty = lev.tilesize[1];
+        Flt dd = lev.ftsz[0];
+        Flt offy = lev.tile_base;
+        int ncols_to_render = 86;
+        int col = (int)(g.camera[0] / dd);
+        col = col % lev.ncols;
+        //Partial tile offset must be determined here.
+        //The leftmost tile might be partially off-screen.
+        //cdd: camera position in terms of tiles.
+        Flt cdd = g.camera[0] / dd;
+        //flo: just the integer portion
+        Flt flo = floor(cdd);
+        //dec: just the decimal portion
+        Flt dec = (cdd - flo);
+        //offx: the offset to the left of the screen to start drawing tiles
+        Flt offx = -dec * dd;
+        //Log("gl.camera[0]: %lf   offx: %lf\n",gl.camera[0],offx);
+        for (int j=0; j<ncols_to_render; j++) {
+                int row = lev.nrows-1;
+                for (int i=0; i<lev.nrows; i++){
+                        if (lev.arr[row][col] == '#') {
+                                glColor3f(0.9, 0.2, 0.2);
+                                glPushMatrix();
+                                glTranslated((Flt)j*dd+offx + 200, (Flt)i*lev.ftsz[1]+offy + 100, 0);
+                                glBegin(GL_QUADS);
+                                        glVertex2i( 0,  0);
+                                        glVertex2i( 0, ty);
+                                        glVertex2i(tx, ty);
+                                        glVertex2i(tx,  0);
+                                glEnd();
+                                glPopMatrix();
+                        }
+                        --row;
+                }
+                col = (col+1) % lev.ncols;
+        }
+
+
+
+
+
 
     if (g.show_credits){
         r.bot = g.yres -20;
