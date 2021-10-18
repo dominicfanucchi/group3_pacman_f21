@@ -1,4 +1,5 @@
-// Kenneth Wood's c++ personal file for 3350 project
+// Kenneth Wood
+//Kenneth Wood's c++ personal file for 3350 project
 
 #include "fonts.h"
 
