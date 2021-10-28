@@ -173,8 +173,10 @@ struct Global {
     Button button[MAXBUTTONS];
     int nbuttons;
     //
-    ALuint alBufferDrip, alBufferTick;
-    ALuint alSourceDrip, alSourceTick;
+    ALuint alBufferDrip, alBufferTick, 
+    alBufferBeginning, alBufferChomp, alBufferDeath, alBufferEatFruit, alBufferEatGhost, alBufferExtraLife, alBufferIntermission; //pacman sound files
+    ALuint alSourceDrip, alSourceTick, 
+    alSourceBeginning, alSourceChomp, alSourceDeath, alSourceEatFruit, alSourceEatGhost, alSourceExtraLife, alSourceIntermission; //pacman sound files
 
     Flt camera[2];  
 
@@ -381,6 +383,15 @@ void initSound()
     //Buffer holds the sound information.
     g.alBufferDrip = alutCreateBufferFromFile("./sounds/drip.wav");
     g.alBufferTick = alutCreateBufferFromFile("./sounds/tick.wav");
+
+    //pacman sound files
+    g.alBufferBeginning = alutCreateBufferFromFile("./sounds/pacman_beginning.wav");
+    g.alBufferChomp = alutCreateBufferFromFile("./sounds/pacman_chomp.wav");
+    g.alBufferDeath = alutCreateBufferFromFile("./sounds/pacman_death.wav")
+    g.alBufferEatFruit = alutCreateBufferFromFile("./sounds/pacman_eatfruit.wav");
+    g.alBufferEatGhost = alutCreateBufferFromFile("./sounds/pacman_eatghost.wav");
+    g.alBufferIntermission = alutCreateBufferFromFile("./sounds/pacman_intermission.wav");
+    g.alBufferExtraLife = alutCreateBufferFromFile("./sounds/pacman_extrapac.wav")
     //
     //Source refers to the sound.
     //Generate a source, and store it in a buffer.
@@ -405,6 +416,18 @@ void initSound()
         printf("ERROR: setting source\n");
         return;
     }
+
+    //Generate a source, and store it in a buffer.
+    alGenSources(1, &g.alSourceBeginning);
+    alSourcei(g.alSourceBeginning, AL_BUFFER, g.alBufferBeginning);
+    //Set volume and pitch to normal, looping of sound.
+    alSourcef(g.alSourceBeginning, AL_GAIN, 1.0f);
+    alSourcef(g.alSourceBeginning, AL_PITCH, 1.0f);
+    alSourcei(g.alSourceBeginning, AL_LOOPING, AL_TRUE);
+    if (alGetError() != AL_NO_ERROR) {
+        printf("ERROR: setting source\n");
+        return;
+    }
     #endif //USE_OPENAL_SOUND
 }
 
@@ -412,11 +435,13 @@ void cleanupSound()
 {
     #ifdef USE_OPENAL_SOUND
     //First delete the source.
-    alDeleteSources(1, &g.alSourceDrip);
-    alDeleteSources(1, &g.alSourceTick);
+    //alDeleteSources(1, &g.alSourceDrip);
+    //alDeleteSources(1, &g.alSourceTick);
+    alDeleteSources(1, &g.alSourceBeginning);
     //Delete the buffer.
-    alDeleteBuffers(1, &g.alBufferDrip);
-    alDeleteBuffers(1, &g.alBufferTick);
+    //alDeleteBuffers(1, &g.alBufferDrip);
+    //alDeleteBuffers(1, &g.alBufferTick);
+    alDeleteBuffers(1, &g.alSourceBeginning);
     //Close out OpenAL itself.
     //Get active context.
     ALCcontext *Context = alcGetCurrentContext();
