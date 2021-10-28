@@ -337,6 +337,7 @@ public:
 void initOpengl(void);
 int checkMouse(XEvent *e);
 int checkKeys(XEvent *e);
+int toggleCredits(int credits);
 void init();
 void initSounds(void);
 void physics(void);
@@ -346,6 +347,7 @@ void getGridCenter(const int i, const int j, int cent[2]);
 void initSound();
 void cleanupSound();
 void playSound(ALuint source);
+int quitGame();
 #endif //USE_OPENAL_SOUND
 
 
@@ -537,7 +539,7 @@ void initSnake()
 	int i;
 	g.snake.status = 1;
 	g.snake.delay = .15;
-	g.snake.length = rand() % 4 + 3;
+	g.snake.length = 1;
 	for (i=0; i<g.snake.length; i++) {
 		g.snake.pos[i][0] = 2;
 		g.snake.pos[i][1] = 2;
@@ -566,7 +568,7 @@ void init()
 	g.button[g.nbuttons].r.width = 140;
 	g.button[g.nbuttons].r.height = 60;
 	g.button[g.nbuttons].r.left = 20;
-	g.button[g.nbuttons].r.bot = 320;
+	g.button[g.nbuttons].r.bot = 400;
 	g.button[g.nbuttons].r.right =
 	   g.button[g.nbuttons].r.left + g.button[g.nbuttons].r.width;
 	g.button[g.nbuttons].r.top =
@@ -589,7 +591,7 @@ void init()
 	g.button[g.nbuttons].r.width = 140;
 	g.button[g.nbuttons].r.height = 60;
 	g.button[g.nbuttons].r.left = 20;
-	g.button[g.nbuttons].r.bot = 160;
+	g.button[g.nbuttons].r.bot = 240;
 	g.button[g.nbuttons].r.right =
 	   g.button[g.nbuttons].r.left + g.button[g.nbuttons].r.width;
 	g.button[g.nbuttons].r.top = g.button[g.nbuttons].r.bot +
@@ -599,6 +601,29 @@ void init()
 	g.button[g.nbuttons].r.centery = (g.button[g.nbuttons].r.bot +
 	   g.button[g.nbuttons].r.top) / 2;
 	strcpy(g.button[g.nbuttons].text, "Quit");
+	g.button[g.nbuttons].down = 0;
+	g.button[g.nbuttons].click = 0;
+	g.button[g.nbuttons].color[0] = 0.3f;
+	g.button[g.nbuttons].color[1] = 0.3f;
+	g.button[g.nbuttons].color[2] = 0.6f;
+	g.button[g.nbuttons].dcolor[0] = g.button[g.nbuttons].color[0] * 0.5f;
+	g.button[g.nbuttons].dcolor[1] = g.button[g.nbuttons].color[1] * 0.5f;
+	g.button[g.nbuttons].dcolor[2] = g.button[g.nbuttons].color[2] * 0.5f;
+	g.button[g.nbuttons].text_color = 0x00ffffff;
+	g.nbuttons++;
+    g.button[g.nbuttons].r.width = 140;
+	g.button[g.nbuttons].r.height = 60;
+	g.button[g.nbuttons].r.left = 20;
+	g.button[g.nbuttons].r.bot = 80;
+	g.button[g.nbuttons].r.right =
+	   g.button[g.nbuttons].r.left + g.button[g.nbuttons].r.width;
+	g.button[g.nbuttons].r.top = g.button[g.nbuttons].r.bot +
+	   g.button[g.nbuttons].r.height;
+	g.button[g.nbuttons].r.centerx = (g.button[g.nbuttons].r.left +
+	   g.button[g.nbuttons].r.right) / 2;
+	g.button[g.nbuttons].r.centery = (g.button[g.nbuttons].r.bot +
+	   g.button[g.nbuttons].r.top) / 2;
+	strcpy(g.button[g.nbuttons].text, "Credits");
 	g.button[g.nbuttons].down = 0;
 	g.button[g.nbuttons].click = 0;
 	g.button[g.nbuttons].color[0] = 0.3f;
@@ -708,8 +733,13 @@ int checkMouse(XEvent *e)
 							resetGame();
 							break;
 						case 1:
-							printf("Quit was clicked!\n");
-							return 1;
+                            cleanupSound();
+							quitGame();
+                            break;
+                        case 2:
+                            g.show_credits = toggleCredits(g.show_credits);
+                            break;
+
 					}
 				}
 			}
