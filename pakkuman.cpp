@@ -54,56 +54,55 @@ typedef struct t_button {
 
 class Level {
 public:
-        unsigned char arr[64][90];
-        int nrows, ncols;
-        int tilesize[1];
-        Flt ftsz[2];
-        Flt tile_base;
-        Level() {
-                //Log("Level constructor\n");
-                tilesize[0] = 7;
-                tilesize[1] = 7;
-                ftsz[0] = (Flt)tilesize[0];
-                ftsz[1] = (Flt)tilesize[1];
-                tile_base = 25.0;
-                //read level
+    unsigned char arr[64][90];
+    int nrows, ncols;
+    int tilesize[1];
+    Flt ftsz[2];
+    Flt tile_base;
+    Level() {
+        //Log("Level constructor\n");
+        tilesize[0] = 7;
+        tilesize[1] = 12;
+        ftsz[0] = (Flt)tilesize[0];
+        ftsz[1] = (Flt)tilesize[1];
+        tile_base = 25.0;
+        //read level
 
-                FILE *fpi = fopen("map.txt","r");
-                if (fpi) {
-                        nrows=0;
-                        char line[100];
-                        while (fgets(line, 100, fpi) != NULL) {
-                                removeCrLf(line);
-                                int slen = strlen(line);
-                                ncols = slen;
-                                //Log("line: %s\n", line);
-                                for (int j=0; j<slen; j++) {
-                                        arr[nrows][j] = line[j];
-                                }
-                                ++nrows;
-                        }
-                        fclose(fpi);
-                        //printf("nrows of background data: %i\n", nrows);
+        FILE *fpi = fopen("map.txt","r");
+        if (fpi) {
+            nrows=0;
+            char line[100];
+            while (fgets(line, 100, fpi) != NULL) {
+                removeCrLf(line);
+                int slen = strlen(line);
+                ncols = slen;
+                //Log("line: %s\n", line);
+                for (int j=0; j<slen; j++) {
+                    arr[nrows][j] = line[j];
                 }
+                ++nrows;
+            }
+            fclose(fpi);
+            //printf("nrows of background data: %i\n", nrows);
+        }
 
-                for (int i=0; i<nrows; i++) {
-                        for (int j=0; j<ncols; j++) {
-                                printf("%c", arr[i][j]);
-                        }
-                        printf("\n");
-                }
+        for (int i=0; i<nrows; i++) {
+            for (int j=0; j<ncols; j++) {
+                printf("%c", arr[i][j]);
+            }
+            printf("\n");
         }
-        void removeCrLf(char *str) {
-                //remove carriage return and linefeed from a Cstring
-                char *p = str;
-                while (*p) {
-                        if (*p == 10 || *p == 13) {
-                                *p = '\0';
-                                break;
-                        }
-                        ++p;
-                }
+    }
+    void removeCrLf(char *str) { //remove carriage return and linefeed from a Cstring
+        char *p = str;
+        while (*p) {
+            if (*p == 10 || *p == 13) {
+                *p = '\0';
+                break;
+            }
+        ++p;
         }
+    }
 } lev;
 
 // class Image {
@@ -181,7 +180,7 @@ struct Global {
 
     Global() {
         xres = 800;
-        yres = 600;
+        yres = 800;
         gridDim = 40;
         gameover = 0;
         winner = 0;
@@ -720,18 +719,16 @@ void render(void)
     glMatrixMode(GL_MODELVIEW); glLoadIdentity();
     //this sets to 2D mode (no perspective)
     glOrtho(0, g.xres, 0, g.yres, -1, 1);
-    //
     //screen background
     glColor3f(0.5f, 0.5f, 0.5f);
     //glBindTexture(GL_TEXTURE_2D, g.marbleTexture);
     glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 0.0f); glVertex2i(0,      0);
-        glTexCoord2f(0.0f, 1.0f); glVertex2i(0,      g.yres);
+        glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 0);
+        glTexCoord2f(0.0f, 1.0f); glVertex2i(0, g.yres);
         glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, g.yres);
         glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, 0);
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
-    //
     //draw all buttons
     for (i=0; i<g.nbuttons; i++) {
         if (g.button[i].over) {
@@ -780,79 +777,78 @@ void render(void)
     */
     //
     //grid lines...
-    int x0 = s0-b2;
-    int x1 = s0+b2;
-    int y0 = s1-b2;
-    int y1 = s1+b2;
-    glColor3f(0.1f, 0.1f, 0.1f);
-    glBegin(GL_LINES);
-    for (i=1; i<g.gridDim; i++) {
-        y0 += 10;
-        glVertex2i(x0,y0);
-        glVertex2i(x1,y0);
-    }
-    x0 = s0-b2;
-    y0 = s1-b2;
-    y1 = s1+b2;
-    for (j=1; j<g.gridDim; j++) {
-        x0 += 10;
-        glVertex2i(x0,y0);
-        glVertex2i(x0,y1);
-    }
-    glEnd();
+    // int x0 = s0-b2;
+    // int x1 = s0+b2;
+    // int y0 = s1-b2;
+    // int y1 = s1+b2;
+    // glColor3f(0.1f, 0.1f, 0.1f);
+    // glBegin(GL_LINES);
+    // for (i=1; i<g.gridDim; i++) {
+    //     y0 += 10;
+    //     glVertex2i(x0,y0);
+    //     glVertex2i(x1,y0);
+    // }
+    // x0 = s0-b2;
+    // y0 = s1-b2;
+    // y1 = s1+b2;
+    // for (j=1; j<g.gridDim; j++) {
+    //     x0 += 10;
+    //     glVertex2i(x0,y0);
+    //     glVertex2i(x0,y1);
+    // }
+    // glEnd();
 
 
 
     //========================
-        //Render the tile system
-        //========================
-        int tx = lev.tilesize[0];
-        int ty = lev.tilesize[1];
-        Flt dd = lev.ftsz[0];
-        Flt offy = lev.tile_base;
-        int ncols_to_render = 86;
-        int col = (int)(g.camera[0] / dd);
-        col = col % lev.ncols;
-        //Partial tile offset must be determined here.
-        //The leftmost tile might be partially off-screen.
-        //cdd: camera position in terms of tiles.
-        Flt cdd = g.camera[0] / dd;
-        //flo: just the integer portion
-        Flt flo = floor(cdd);
-        //dec: just the decimal portion
-        Flt dec = (cdd - flo);
-        //offx: the offset to the left of the screen to start drawing tiles
-        Flt offx = -dec * dd;
-        //Log("gl.camera[0]: %lf   offx: %lf\n",gl.camera[0],offx);
-        for (int j=0; j<ncols_to_render; j++) {
-                int row = lev.nrows-1;
-                for (int i=0; i<lev.nrows; i++){
-                        if (lev.arr[row][col] == '#') {
-                                glColor3f(0.9, 0.2, 0.2);
-                                glPushMatrix();
-                                glTranslated((Flt)j*dd+offx + 200, (Flt)i*lev.ftsz[1]+offy + 100, 0);
-                                glBegin(GL_QUADS);
-                                        glVertex2i( 0,  0);
-                                        glVertex2i( 0, ty);
-                                        glVertex2i(tx, ty);
-                                        glVertex2i(tx,  0);
-                                glEnd();
-                                glPopMatrix();
-                        }
-                        --row;
+    //Render the tile system
+    //========================
+    int tx = lev.tilesize[0];
+    int ty = lev.tilesize[1];
+    Flt dd = lev.ftsz[0];
+    Flt offy = lev.tile_base;
+    int ncols_to_render = 86;
+    int col = (int)(g.camera[0] / dd);
+    col = col % lev.ncols;
+    //Partial tile offset must be determined here.
+    //The leftmost tile might be partially off-screen.
+    //cdd: camera position in terms of tiles.
+    Flt cdd = g.camera[0] / dd;
+    //flo: just the integer portion
+    Flt flo = floor(cdd);
+    //dec: just the decimal portion
+    Flt dec = (cdd - flo);
+    //offx: the offset to the left of the screen to start drawing tiles
+    Flt offx = -dec * dd;
+    //Log("gl.camera[0]: %lf   offx: %lf\n",gl.camera[0],offx);
+    for (int j=0; j<ncols_to_render; j++) {
+        int row = lev.nrows-1;
+        for (int i=0; i<lev.nrows; i++) {
+            if (lev.arr[row][col] == '#') {
+                glColor3f(0.2, 0.2, 0.9);
+                glPushMatrix();
+                glTranslated((Flt)j*dd+offx + 200, (Flt)i*lev.ftsz[1]+offy + 100, 0);
+                glBegin(GL_QUADS);
+                    glVertex2i( 0,  0);
+                    glVertex2i( 0, ty);
+                    glVertex2i(tx, ty);
+                    glVertex2i(tx,  0);
+                glEnd();
+                glPopMatrix();
                 }
-                col = (col+1) % lev.ncols;
-        }
+                --row;
+            }
+    col = (col+1) % lev.ncols;
+    }
 
     if (g.show_credits) {
         r.bot = g.yres -20;
         r.left = 10;
         r.center = 0;
         ggprint8b(&r, 16, 0x00A020F0, "Credits:");
-        show_dominics_credits(50, g.yres-50);
-        show_andrew_credits(50, g.yres-80);
-        show_kenneth_credits(50, g.yres-110);
-        show_juan_credits(50, g.yres-140);
-
+        show_dominics_credits(50, g.yres - 50);
+        show_andrew_credits(50, g.yres - 80);
+        show_kenneth_credits(50, g.yres - 110);
+        show_juan_credits(50, g.yres - 140);
     }
 }
