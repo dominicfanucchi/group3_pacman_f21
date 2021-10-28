@@ -387,11 +387,11 @@ void initSound()
     //pacman sound files
     g.alBufferBeginning = alutCreateBufferFromFile("./sounds/pacman_beginning.wav");
     g.alBufferChomp = alutCreateBufferFromFile("./sounds/pacman_chomp.wav");
-    g.alBufferDeath = alutCreateBufferFromFile("./sounds/pacman_death.wav")
+    g.alBufferDeath = alutCreateBufferFromFile("./sounds/pacman_death.wav");
     g.alBufferEatFruit = alutCreateBufferFromFile("./sounds/pacman_eatfruit.wav");
     g.alBufferEatGhost = alutCreateBufferFromFile("./sounds/pacman_eatghost.wav");
     g.alBufferIntermission = alutCreateBufferFromFile("./sounds/pacman_intermission.wav");
-    g.alBufferExtraLife = alutCreateBufferFromFile("./sounds/pacman_extrapac.wav")
+    g.alBufferExtraLife = alutCreateBufferFromFile("./sounds/pacman_extrapac.wav");
     //
     //Source refers to the sound.
     //Generate a source, and store it in a buffer.
@@ -399,6 +399,7 @@ void initSound()
     alSourcei(g.alSourceDrip, AL_BUFFER, g.alBufferDrip);
     //Set volume and pitch to normal, no looping of sound.
     alSourcef(g.alSourceDrip, AL_GAIN, 1.0f);
+    
     alSourcef(g.alSourceDrip, AL_PITCH, 1.0f);
     alSourcei(g.alSourceDrip, AL_LOOPING, AL_FALSE);
     if (alGetError() != AL_NO_ERROR) {
