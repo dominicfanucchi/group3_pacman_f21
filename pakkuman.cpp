@@ -844,20 +844,15 @@ void render(void)
                 col = (col+1) % lev.ncols;
         }
 
-
-
-
-
-
     if (g.show_credits) {
         r.bot = g.yres -20;
         r.left = 10;
         r.center = 0;
         ggprint8b(&r, 16, 0x00A020F0, "Credits:");
         show_dominics_credits(50, g.yres-50);
-        //show_andrew_credits(50, g.yres-80);
-        //show_kenneth_credits(50, g.yres-110);
-        //show_juan_credits(50, g.yres-140);
+        show_andrew_credits(50, g.yres-80);
+        show_kenneth_credits(50, g.yres-110);
+        show_juan_credits(50, g.yres-140);
 
     }
 }
