@@ -8,7 +8,7 @@ File name: anguyen2.cpp
 #include <stdlib.h>
 using namespace std;
 
-/*#include "fonts.h"
+#include "fonts.h"
 void show_andrew_credits(int x, int y)
 {
     Rect r;
@@ -16,7 +16,7 @@ void show_andrew_credits(int x, int y)
     r.left = x;
     r.center = 1;
     ggprint8b(&r, 16, 0x00ff0000, "Andrew");
-}*/
+}
 
 int score=0,level=1;
 
@@ -76,6 +76,7 @@ void ghost::changePosition(int changeX, int changeY) {
     y = y + changeY;
 }
 
+/*
 int main(){
     char choice; 
 
@@ -92,3 +93,4 @@ int main(){
 
     cin>>choice;
 }
+*/
