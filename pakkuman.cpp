@@ -24,6 +24,7 @@
 typedef double Flt;
 typedef double Vec[3];
 typedef Flt     Matrix[4][4];
+int main_game = 0;
 using namespace std;
 
 //macros
@@ -284,6 +285,7 @@ int toggleCredits(int credits);
 void init();
 void initSounds(void);
 void physics(void);
+extern void mainDisplay(void);
 void render(void);
 void getGridCenter(const int i, const int j, int cent[2]);
 #ifdef USE_OPENAL_SOUND
@@ -321,6 +323,7 @@ int main(int argc, char *argv[])
     clock_gettime(CLOCK_REALTIME, &timePause);
     clock_gettime(CLOCK_REALTIME, &timeStart);
     int done = 0;
+    mainDisplay();
     while (!done) {
         while (x11.getXPending()) {
             XEvent e = x11.getXNextEvent();
@@ -352,8 +355,12 @@ int main(int argc, char *argv[])
             //7. Reduce the countdown by our physics-rate
             physicsCountdown -= physicsRate;
         }
+	mainDisplay();
         //Always render every frame.
-        render();
+	if(main_game){
+
+        	render();
+	}
         x11.swapBuffers();
     }
     cleanupSound();
@@ -622,7 +629,11 @@ int checkKeys(XEvent *e)
             
             break;
         case XK_c:
-            g.show_credits = 1;   
+            g.show_credits = 1;
+	    break;
+	case XK_p:
+	    main_game = 1;
+	    break;
     }
     return 0;
 }
@@ -717,6 +728,7 @@ extern void show_dominics_credits(int x, int y);
 extern void show_andrew_credits(int x, int y);
 extern void show_kenneth_credits(int x, int y);
 extern void show_juan_credits(int, int);
+extern void mainDisplay(void);
 
 void render(void)
 {
