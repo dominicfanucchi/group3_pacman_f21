@@ -21,7 +21,7 @@ void show_juan_credits(int x, int y){
 }
 
 //Working on adding a main display. 
-/*
+
 struct Welcome_Display {
     int x, y;
 
@@ -67,5 +67,5 @@ void mainDisplay(void){
     ggprint8b(&r, 16, 0x00ff0000, "Welcome to Pacman!");
     ggprint8b(&r, 16, 0x00ff0000, "Press p to Play!");
 }
-*/
+
 
