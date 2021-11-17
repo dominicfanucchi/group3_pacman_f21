@@ -182,8 +182,8 @@ struct Global {
     Flt camera[2];  
 
     Global() {
-        xres = 800;
-        yres = 800;
+        xres = 512;
+        yres = 512;
         gridDim = 40;
         gameover = 0;
         winner = 0;
@@ -238,7 +238,7 @@ public:
     void setTitle() {
         //Set the window title bar.
         XMapWindow(dpy, win);
-        XStoreName(dpy, win, "snake");
+        XStoreName(dpy, win, "Pakkuman");
     }
     void setupScreenRes(const int w, const int h) {
         g.xres = w;
