@@ -76,11 +76,11 @@ void ghost::changePosition(int changeX, int changeY) {
     y = y + changeY;
 }
 
-/*
+
 int main(){
     char choice; 
 
-    cout<<"MENU: "<<endl;
+    /*cout<<"MENU: "<<endl;
     cout<<"1 : CREATE ACCOUNT "<<endl;
     cout<<"2 : LOGIN"<<endl;
     cout<<"3 : DELETE ACCOUNT"<<endl;
@@ -91,6 +91,6 @@ int main(){
     
     cout<<"Enter your choice: ";
 
-    cin>>choice;
+    cin>>choice;*/
 }
-*/
+
