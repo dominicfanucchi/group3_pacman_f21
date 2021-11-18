@@ -6,6 +6,18 @@
 #include <GL/glx.h>
 #include"fonts.h"
 
+struct Welcome_Display {
+    int x, y;
+
+    Welcome_Display() {
+        x = 800;
+        y = 800;
+
+
+    }
+}w;
+
+
 void show_juan_credits(int x, int y){
 
         Rect r;
@@ -22,19 +34,6 @@ void show_juan_credits(int x, int y){
 
 //Working on adding a main display. 
 
-struct Welcome_Display {
-    int x, y;
-
-    Welcome_Display() {
-        x = 800;
-        y = 800;
-
-
-    }
-}w;
-
-
-
 void mainDisplay(void){
     glViewport(0, 0, w.x, w.y);
     //clear color buffer
@@ -46,8 +45,8 @@ void mainDisplay(void){
     //this sets to 2D mode (no perspective)
     glOrtho(0, w.x, 0, w.y, -1, 1);
     //screen background
-    glColor3f(0.5f, 0.5f, 0.5f);
-    //glBindTexture(GL_TEXTURE_2D, g.marbleTexture);
+    glColor3f(0.0f, 0.0f, 0.0f);
+    
     glBegin(GL_QUADS);
         glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 0);
         glTexCoord2f(0.0f, 1.0f); glVertex2i(0, w.y);
