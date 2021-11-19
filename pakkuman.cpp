@@ -182,8 +182,8 @@ struct Global {
     Flt camera[2];  
 
     Global() {
-        xres = 512;
-        yres = 512;
+        xres = 815;
+        yres = 800;
         gridDim = 40;
         gameover = 0;
         winner = 0;
@@ -379,18 +379,15 @@ void initSound()
     }
     //Clear error state.
     alGetError();
-    //
+    
     //Setup the listener.
     //Forward and up vectors are used.
     float vec[6] = {0.0f,0.0f,1.0f, 0.0f,1.0f,0.0f};
     alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
     alListenerfv(AL_ORIENTATION, vec);
     alListenerf(AL_GAIN, 1.0f);
-    //
+    
     //Buffer holds the sound information.
-    g.alBufferDrip = alutCreateBufferFromFile("./sounds/drip.wav");
-    g.alBufferTick = alutCreateBufferFromFile("./sounds/tick.wav");
-
     //pacman sound files
     g.alBufferBeginning = alutCreateBufferFromFile("./sounds/pacman_beginning.wav");
     g.alBufferChomp = alutCreateBufferFromFile("./sounds/pacman_chomp.wav");
@@ -399,32 +396,8 @@ void initSound()
     g.alBufferEatGhost = alutCreateBufferFromFile("./sounds/pacman_eatghost.wav");
     g.alBufferIntermission = alutCreateBufferFromFile("./sounds/pacman_intermission.wav");
     g.alBufferExtraLife = alutCreateBufferFromFile("./sounds/pacman_extrapac.wav");
-    //
-    //Source refers to the sound.
-    //Generate a source, and store it in a buffer.
-    alGenSources(1, &g.alSourceDrip);
-    alSourcei(g.alSourceDrip, AL_BUFFER, g.alBufferDrip);
-    //Set volume and pitch to normal, no looping of sound.
-    alSourcef(g.alSourceDrip, AL_GAIN, 1.0f);
     
-    alSourcef(g.alSourceDrip, AL_PITCH, 1.0f);
-    alSourcei(g.alSourceDrip, AL_LOOPING, AL_FALSE);
-    if (alGetError() != AL_NO_ERROR) {
-        printf("ERROR: setting source\n");
-        return;
-    }
-    //Generate a source, and store it in a buffer.
-    alGenSources(1, &g.alSourceTick);
-    alSourcei(g.alSourceTick, AL_BUFFER, g.alBufferTick);
-    //Set volume and pitch to normal, no looping of sound.
-    alSourcef(g.alSourceTick, AL_GAIN, 1.0f);
-    alSourcef(g.alSourceTick, AL_PITCH, 1.0f);
-    alSourcei(g.alSourceTick, AL_LOOPING, AL_FALSE);
-    if (alGetError() != AL_NO_ERROR) {
-        printf("ERROR: setting source\n");
-        return;
-    }
-
+    //Source refers to the sound.
     //Generate a source, and store it in a buffer.
     alGenSources(1, &g.alSourceBeginning);
     alSourcei(g.alSourceBeginning, AL_BUFFER, g.alBufferBeginning);
@@ -443,12 +416,8 @@ void cleanupSound()
 {
     #ifdef USE_OPENAL_SOUND
     //First delete the source.
-    //alDeleteSources(1, &g.alSourceDrip);
-    //alDeleteSources(1, &g.alSourceTick);
     alDeleteSources(1, &g.alSourceBeginning);
     //Delete the buffer.
-    //alDeleteBuffers(1, &g.alBufferDrip);
-    //alDeleteBuffers(1, &g.alBufferTick);
     alDeleteBuffers(1, &g.alSourceBeginning);
     //Close out OpenAL itself.
     //Get active context.
@@ -478,22 +447,22 @@ void initOpengl(void)
     glClearDepth(1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     glEnable(GL_COLOR_MATERIAL);
-    //
+    
     //choose one of these
     //glShadeModel(GL_FLAT);
     glShadeModel(GL_SMOOTH);
     glDisable(GL_LIGHTING);
     glBindTexture(GL_TEXTURE_2D, 0);
-    //
+    
     glEnable(GL_TEXTURE_2D);
     //marble_texture = loadBMP("marble.bmp");
     glBindTexture(GL_TEXTURE_2D, 0);
-    //
+    
     //load the image file into a ppm structure.
-    //
+    
     //g.marbleImage = ppm6GetImage("./images/marble.ppm");
     //g.marbleImage = &img[0];
-    //
+    
     //create opengl texture elements
     //glGenTextures(1, &g.marbleTexture);
     //glBindTexture(GL_TEXTURE_2D, g.marbleTexture);
@@ -729,6 +698,7 @@ extern void show_andrew_credits(int x, int y);
 extern void show_kenneth_credits(int x, int y);
 extern void show_juan_credits(int, int);
 extern void mainDisplay(void);
+extern void credit_screen(void);
 
 void render(void)
 {
@@ -839,7 +809,7 @@ void render(void)
 
 
     //========================
-    //Render the tile system
+    // Render the tile system
     //========================
     int tx = lev.tilesize[0];
     int ty = lev.tilesize[1];
@@ -880,13 +850,14 @@ void render(void)
     }
 
     if (g.show_credits) {
-        r.bot = g.yres -20;
-        r.left = 10;
-        r.center = 0;
-        ggprint8b(&r, 16, 0x00A020F0, "Credits:");
-        show_dominics_credits(50, g.yres - 50);
-        show_andrew_credits(50, g.yres - 80);
-        show_kenneth_credits(50, g.yres - 110);
-        show_juan_credits(50, g.yres - 140);
+        credit_screen();
+        // r.bot = g.yres -20;
+        // r.left = 10;
+        // r.center = 0;
+        // ggprint8b(&r, 16, 0x00A020F0, "Credits:");
+        // show_dominics_credits(50, g.yres - 50);
+        // show_andrew_credits(50, g.yres - 80);
+        // show_kenneth_credits(50, g.yres - 110);
+        // show_juan_credits(50, g.yres - 140);
     }
 }

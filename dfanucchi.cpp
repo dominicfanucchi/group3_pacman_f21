@@ -4,6 +4,8 @@
 //date: September 2021
 
 #include "fonts.h"
+#include <X11/Xlib.h>
+#include <GL/glx.h>
 #include <iostream>
 //#include "dfanucchi.h"
 using namespace std;
@@ -17,6 +19,45 @@ void show_dominics_credits(int x, int y)
     r.left = x;
     r.center = 5;
     ggprint8b(&r, 16, 0x00ffff34, "Dominic Fanucchi");
+}
+
+struct credits_screen {
+    int x, y;
+
+    credits_screen() {
+        x = 815;
+        y = 800;
+    }
+}c;
+
+void credit_screen(void){
+    glViewport(0, 0, c.x, c.y);
+    //clear color buffer
+    glClearColor(0.5f, 0.2f, 0.3f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    //init matrices
+    glMatrixMode (GL_PROJECTION); glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+    //this sets to 2D mode (no perspective)
+    glOrtho(0, c.x, 0, c.y, -1, 1);
+    //screen background
+    glColor3f(0.5f, 0.5f, 0.5f);
+    //glBindTexture(GL_TEXTURE_2D, g.marbleTexture);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 0);
+        glTexCoord2f(0.0f, 1.0f); glVertex2i(0, c.y);
+        glTexCoord2f(1.0f, 1.0f); glVertex2i(c.x, c.y);
+        glTexCoord2f(1.0f, 0.0f); glVertex2i(c.x, 0);
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+
+
+    Rect r;
+
+    r.bot = 400;
+    r.left = 400;
+    r.center = 1;
 }
 
 // void load_and_bind_textures()
