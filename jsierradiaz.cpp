@@ -84,7 +84,7 @@ struct Welcome_Display {
     Welcome_Display() {
         x = 800;
         y = 800;
-	MainDisplay=NULL;
+	mainDisplay=NULL;
 
 
     }
