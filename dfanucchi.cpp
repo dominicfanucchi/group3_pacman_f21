@@ -8,6 +8,11 @@
 #include <GL/glx.h>
 #include <iostream>
 //#include "dfanucchi.h"
+#define USE_OPENAL_SOUND
+#ifdef USE_OPENAL_SOUND
+#include </usr/include/AL/alut.h>
+#endif //USE_OPENAL_SOUND
+
 using namespace std;
 
 unsigned int maze_tex;
@@ -21,7 +26,8 @@ void show_dominics_credits(int x, int y)
     ggprint8b(&r, 16, 0x00ffff34, "Dominic Fanucchi");
 }
 
-struct credits_screen {
+struct credits_screen 
+{
     int x, y;
 
     credits_screen() {
@@ -30,7 +36,8 @@ struct credits_screen {
     }
 }c;
 
-void credit_screen(void){
+
+void credit_screen(int x, int y){
     glViewport(0, 0, c.x, c.y);
     //clear color buffer
     glClearColor(0.5f, 0.2f, 0.3f, 0.0f);
@@ -50,14 +57,83 @@ void credit_screen(void){
         glTexCoord2f(1.0f, 0.0f); glVertex2i(c.x, 0);
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
+}
 
+struct Sound 
+{
+		ALuint alBufferBeginning, alBufferChomp, alBufferDeath, alBufferEatFruit, alBufferEatGhost, alBufferExtraLife, alBufferIntermission; //pacman sound files
+    ALuint alSourceBeginning, alSourceChomp, alSourceDeath, alSourceEatFruit, alSourceEatGhost, alSourceExtraLife, alSourceIntermission; //pacman sound files
+} s;
 
+void initSound()
+{
+    #ifdef USE_OPENAL_SOUND
+    alutInit(0, NULL);
+    if (alGetError() != AL_NO_ERROR) {
+        printf("ERROR: alutInit()\n");
+        return;
+    }
+    //Clear error state.
+    alGetError();
+    
+    //Setup the listener.
+    //Forward and up vectors are used.
+    float vec[6] = {0.0f,0.0f,1.0f, 0.0f,1.0f,0.0f};
+    alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
+    alListenerfv(AL_ORIENTATION, vec);
+    alListenerf(AL_GAIN, 1.0f);
+    
+    //Buffer holds the sound information.
+    //pacman sound files
+    g.alBufferBeginning = alutCreateBufferFromFile("./sounds/pacman_beginning.wav");
+    g.alBufferChomp = alutCreateBufferFromFile("./sounds/pacman_chomp.wav");
+    g.alBufferDeath = alutCreateBufferFromFile("./sounds/pacman_death.wav");
+    g.alBufferEatFruit = alutCreateBufferFromFile("./sounds/pacman_eatfruit.wav");
+    g.alBufferEatGhost = alutCreateBufferFromFile("./sounds/pacman_eatghost.wav");
+    g.alBufferIntermission = alutCreateBufferFromFile("./sounds/pacman_intermission.wav");
+    g.alBufferExtraLife = alutCreateBufferFromFile("./sounds/pacman_extrapac.wav");
+    
+    //Source refers to the sound.
+    //Generate a source, and store it in a buffer.
+    alGenSources(1, &g.alSourceBeginning);
+    alSourcei(g.alSourceBeginning, AL_BUFFER, g.alBufferBeginning);
+    //Set volume and pitch to normal, looping of sound.
+    alSourcef(g.alSourceBeginning, AL_GAIN, 1.0f);
+    alSourcef(g.alSourceBeginning, AL_PITCH, 1.0f);
+    alSourcei(g.alSourceBeginning, AL_LOOPING, AL_TRUE);
+    if (alGetError() != AL_NO_ERROR) {
+        printf("ERROR: setting source\n");
+        return;
+    }
+    #endif //USE_OPENAL_SOUND
+}
 
-    Rect r;
+void cleanupSound()
+{
+    #ifdef USE_OPENAL_SOUND
+    //First delete the source.
+    alDeleteSources(1, &g.alSourceBeginning);
+    //Delete the buffer.
+    alDeleteBuffers(1, &g.alSourceBeginning);
+    //Close out OpenAL itself.
+    //Get active context.
+    ALCcontext *Context = alcGetCurrentContext();
+    //Get device for active context.
+    ALCdevice *Device = alcGetContextsDevice(Context);
+    //Disable context.
+    alcMakeContextCurrent(NULL);
+    //Release context(s).
+    alcDestroyContext(Context);
+    //Close device.
+    alcCloseDevice(Device);
+    #endif //USE_OPENAL_SOUND
+}
 
-    r.bot = 400;
-    r.left = 400;
-    r.center = 1;
+void playSound(ALuint source)
+{
+    #ifdef USE_OPENAL_SOUND
+    alSourcePlay(source);
+    #endif //USE_OPENAL_SOUND
 }
 
 // void load_and_bind_textures()
