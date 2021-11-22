@@ -20,7 +20,6 @@
 #endif //USE_OPENAL_SOUND
 
 //defined types
-
 typedef double Flt;
 typedef double Vec[3];
 typedef Flt     Matrix[4][4];
@@ -173,12 +172,7 @@ struct Global {
     //GLuint marbleTexture;
     Button button[MAXBUTTONS];
     int nbuttons;
-    //
-    ALuint alBufferDrip, alBufferTick, 
-    alBufferBeginning, alBufferChomp, alBufferDeath, alBufferEatFruit, alBufferEatGhost, alBufferExtraLife, alBufferIntermission; //pacman sound files
-    ALuint alSourceDrip, alSourceTick, 
-    alSourceBeginning, alSourceChomp, alSourceDeath, alSourceEatFruit, alSourceEatGhost, alSourceExtraLife, alSourceIntermission; //pacman sound files
-
+    
     Flt camera[2];  
 
     Global() {
@@ -283,17 +277,18 @@ int checkMouse(XEvent *e);
 int checkKeys(XEvent *e);
 int toggleCredits(int credits);
 void init();
-void initSounds(void);
+extern void initSounds(void);
 void physics(void);
 extern void mainDisplay(void);
 void render(void);
 void getGridCenter(const int i, const int j, int cent[2]);
 #ifdef USE_OPENAL_SOUND
-void initSound();
-void cleanupSound();
-void playSound(ALuint source);
-int quitGame();
+extern void initSound();
+extern void cleanupSound();
+extern void playSound(ALuint source);
 #endif //USE_OPENAL_SOUND
+int quitGame();
+
 
 //Setup timers
 const double physicsRate = 1.0 / 60.0;
@@ -367,77 +362,6 @@ int main(int argc, char *argv[])
     cleanup_fonts();
     logClose();
     return 0;
-}
-
-void initSound()
-{
-    #ifdef USE_OPENAL_SOUND
-    alutInit(0, NULL);
-    if (alGetError() != AL_NO_ERROR) {
-        printf("ERROR: alutInit()\n");
-        return;
-    }
-    //Clear error state.
-    alGetError();
-    
-    //Setup the listener.
-    //Forward and up vectors are used.
-    float vec[6] = {0.0f,0.0f,1.0f, 0.0f,1.0f,0.0f};
-    alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
-    alListenerfv(AL_ORIENTATION, vec);
-    alListenerf(AL_GAIN, 1.0f);
-    
-    //Buffer holds the sound information.
-    //pacman sound files
-    g.alBufferBeginning = alutCreateBufferFromFile("./sounds/pacman_beginning.wav");
-    g.alBufferChomp = alutCreateBufferFromFile("./sounds/pacman_chomp.wav");
-    g.alBufferDeath = alutCreateBufferFromFile("./sounds/pacman_death.wav");
-    g.alBufferEatFruit = alutCreateBufferFromFile("./sounds/pacman_eatfruit.wav");
-    g.alBufferEatGhost = alutCreateBufferFromFile("./sounds/pacman_eatghost.wav");
-    g.alBufferIntermission = alutCreateBufferFromFile("./sounds/pacman_intermission.wav");
-    g.alBufferExtraLife = alutCreateBufferFromFile("./sounds/pacman_extrapac.wav");
-    
-    //Source refers to the sound.
-    //Generate a source, and store it in a buffer.
-    alGenSources(1, &g.alSourceBeginning);
-    alSourcei(g.alSourceBeginning, AL_BUFFER, g.alBufferBeginning);
-    //Set volume and pitch to normal, looping of sound.
-    alSourcef(g.alSourceBeginning, AL_GAIN, 1.0f);
-    alSourcef(g.alSourceBeginning, AL_PITCH, 1.0f);
-    alSourcei(g.alSourceBeginning, AL_LOOPING, AL_TRUE);
-    if (alGetError() != AL_NO_ERROR) {
-        printf("ERROR: setting source\n");
-        return;
-    }
-    #endif //USE_OPENAL_SOUND
-}
-
-void cleanupSound()
-{
-    #ifdef USE_OPENAL_SOUND
-    //First delete the source.
-    alDeleteSources(1, &g.alSourceBeginning);
-    //Delete the buffer.
-    alDeleteBuffers(1, &g.alSourceBeginning);
-    //Close out OpenAL itself.
-    //Get active context.
-    ALCcontext *Context = alcGetCurrentContext();
-    //Get device for active context.
-    ALCdevice *Device = alcGetContextsDevice(Context);
-    //Disable context.
-    alcMakeContextCurrent(NULL);
-    //Release context(s).
-    alcDestroyContext(Context);
-    //Close device.
-    alcCloseDevice(Device);
-    #endif //USE_OPENAL_SOUND
-}
-
-void playSound(ALuint source)
-{
-    #ifdef USE_OPENAL_SOUND
-    alSourcePlay(source);
-    #endif //USE_OPENAL_SOUND
 }
 
 void initOpengl(void)
