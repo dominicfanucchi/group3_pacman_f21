@@ -61,11 +61,6 @@ public:
     
 };
 
-Collider::Collider()
-{
-    coin = { 0, 0, 0, 0 };
-}
-
 // ERROR: expected expression 
 //Constructor 
 
