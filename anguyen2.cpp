@@ -13,7 +13,6 @@ using namespace std;
 #include <string>
 #include <math.h>
 
-/*
 #include "fonts.h"
 void show_andrew_credits(int x, int y)
 {
@@ -23,7 +22,6 @@ void show_andrew_credits(int x, int y)
     r.center = 1;
     ggprint8b(&r, 16, 0x00ff0000, "Andrew Nguyen");
 }
-*/
 
 const int TILE_WIDTH  = 30;
 const int TILE_HEIGHT = 30;
@@ -170,6 +168,7 @@ void ghost::changePosition(int changeX, int changeY)
     y = y + changeY;
 }
 
+/*
 int main()
 {
     char choice; 
@@ -185,7 +184,8 @@ int main()
     
     cout<<"Enter your choice: ";
 
-    cin>>choice;*/
+    cin>>choice;
     
     return 0; 
 }
+*/ 
