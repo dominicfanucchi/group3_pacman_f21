@@ -117,7 +117,7 @@ public:
                 ftsz[1] = (Flt)tilesize[1];
                 tile_base = 25.0;
                 //read level
-
+                
                 FILE *fpi = fopen("map.txt","r");
                 if (fpi) {
                         nrows=0;
@@ -135,7 +135,7 @@ public:
                         fclose(fpi);
                         //printf("nrows of background data: %i\n", nrows);
                 }
-
+                
                 for (int i=0; i<nrows; i++) {
                         for (int j=0; j<ncols; j++) {
                                 printf("%c", arr[i][j]);
@@ -143,6 +143,7 @@ public:
                         printf("\n");
                 }
         }
+        
         void removeCrLf(char *str) {
                 //remove carriage return and linefeed from a Cstring
                 char *p = str;
@@ -221,11 +222,12 @@ struct Global {
 	int xres, yres;
 	Grid grid[MAX_GRID][MAX_GRID];
 	Snake snake;
-	Rat rat;
+	Rat rats [100];;
 	int gridDim;
 	int boardDim;
 	int gameover;
 	int winner;
+    int score;
     int show_credits;
 	Image *marbleImage;
 	GLuint marbleTexture;
@@ -243,6 +245,7 @@ struct Global {
 		gridDim = 40;
 		gameover = 0;
 		winner = 0;
+        int score = 0;
 		nbuttons = 0;
 		marbleImage=NULL;
 		camera[0] = camera[1] = 0.0;
@@ -547,13 +550,28 @@ void initSnake()
 	g.snake.direction = DIRECTION_RIGHT;
 	//snake.timer = glfwGetTime() + 0.5;
 }
+    
+// Kenneths work, adjusted pellets to be an array
+// and have their positions set to be eaten. 
 
 void initRat()
 {
-	g.rat.status = 1;
-	g.rat.pos[0] = 25;
-	g.rat.pos[1] = 2;
+    
+    for (int i = 0; i<10; i++){
+        g.rats[i].status = 1;
+        g.rats[i].pos[0] = 30 - (i*3);
+        g.rats[i].pos[0] = 10 +(i*2);
+    }
+	
+        g.rats[0].status = 1;
+    g.rats[1].status = 1;
+	g.rats[0].pos[0] = 25;
+    g.rats[1].pos[0] = 12;
+	g.rats[0].pos[1] = 2;
+    g.rats[1].pos[1] = 23;
+    
 }
+
 
 void init()
 {
@@ -843,10 +861,17 @@ void physics(void)
 		newpos[1] = oldpos[1];
 	}
 	//did the snake eat the rat???
-	if (headpos[0] == g.rat.pos[0] && headpos[1] == g.rat.pos[1]) {
-		//yes, increase length of snake.
-		playSound(g.alSourceTick);
+	for (i=0; i <10; i++){
+        if (headpos[0] == g.rats[i].pos[0] && headpos[1] == g.rats[i].pos[1]) {
+		    //yes, increase length of snake.
+		    playSound(g.alSourceTick);
+            if( g.rats[i].status ==1){
+            g.score++;
+            g.rats[i].status = 0; 
+            }
+        
 		//put new segment at end of snake.
+       /*
 		Log("snake ate rat. snake.length: %i   dir: %i\n",
 		                                g.snake.length,g.snake.direction);
 		int addlength = rand() % 4 + 4;
@@ -855,26 +880,37 @@ void physics(void)
 			g.snake.pos[g.snake.length][1] = g.snake.pos[g.snake.length-1][1];
 			g.snake.length++;
 		}
+       */
 		//new position for rat...
 		int collision=0;
 		int ntries=0;
 		while (1) {
-			g.rat.pos[0] = rand() % g.gridDim;
-			g.rat.pos[1] = rand() % g.gridDim;
+            //for (int j = 0; j<10; j++){
+			//g.rats[i].status = 0;    
+            //g.rats[j].pos[0] = -1;
+			//g.rats[j].pos[1] = -1;
+            
 			collision=0;
+            //}
 			for (i=0; i<g.snake.length; i++) {
-				if (g.rat.pos[0] == g.snake.pos[i][0] &&
-					g.rat.pos[1] == g.snake.pos[i][1]) {
+				if (g.rats[0].pos[0] == g.snake.pos[i][0] &&
+					g.rats[0].pos[1] == g.snake.pos[i][1]) {
 					collision=1;
 					break;
 				}
-			}
+            }
+            
 			if (!collision) break;
 			if (++ntries > 1000000) break;
-		}
-		Log("new rat: %i %i\n",g.rat.pos[0],g.rat.pos[1]);
+            
+		
+        }
+		Log("new rat: %i %i\n",g.rats[0].pos[0],g.rats[0].pos[1]);
 		return;
-	}
+        
+        
+        }
+    }	
 }
 void show_dominics_credits(int x, int y);
 void show_andrew_credits(int x, int y);
@@ -897,7 +933,7 @@ void render(void)
 	int cent[2];
 	//bq is the width of one grid section
 	//--------------------------------------------------------
-	//start the opengl stuff
+	//start the open    gl stuff
 	//set the viewing area on screen
 	glViewport(0, 0, g.xres, g.yres);
 	//clear color buffer
@@ -956,7 +992,7 @@ void render(void)
 			ggprint16(&r, 0, g.button[i].text_color, g.button[i].text);
 		}
 	}
-	/*
+	
 	//draw the main game board in middle of screen
 	glColor3f(0.6f, 0.5f, 0.2f);
 	glBegin(GL_QUADS);
@@ -965,7 +1001,7 @@ void render(void)
 		glVertex2i(s0+b2, s1+b2);
 		glVertex2i(s0+b2, s1-b2);
 	glEnd();
-	*/
+	
 	//
 	//grid lines...
 	int x0 = s0-b2;
@@ -1027,21 +1063,26 @@ void render(void)
 	//
 	//
 	//draw rat...
-	getGridCenter(g.rat.pos[1],g.rat.pos[0],cent);
-	glColor3f(0.1, 0.1f, 0.0f);
+    
+    for (i= 0; i<10; i++){
+        if( g.rats[i].status ==1){
+	getGridCenter(g.rats[i].pos[1],g.rats[i].pos[0],cent);
+	//getGridCenter(g.rats[1].pos[1],g.rats[1].pos[0],cent);
+    glColor3f(0.4, 0.7f, 0.1f);
 	glBegin(GL_QUADS);
 	glVertex2i(cent[0]-4, cent[1]-3);
 	glVertex2i(cent[0]-4, cent[1]+4);
 	glVertex2i(cent[0]+3, cent[1]+4);
 	glVertex2i(cent[0]+3, cent[1]-3);
 	glEnd();
+        }
+    }
 	//
 	//
 	r.left   = g.xres/2;
 	r.bot    = g.yres-100;
 	r.center = 1;
-	ggprint16(&r, 16, 0x00ffffff, "Snake \n (press c for credits)");
-
+    ggprint16(&r, 16, 0x00ffffff, "score: %d", g.score);
 
 
 	//========================
@@ -1067,9 +1108,12 @@ void render(void)
         //Log("gl.camera[0]: %lf   offx: %lf\n",gl.camera[0],offx);
         for (int j=0; j<ncols_to_render; j++) {
                 int row = lev.nrows-1;
+                
                 for (int i=0; i<lev.nrows; i++){
                         if (lev.arr[row][col] == '#') {
-                                glColor3f(0.9, 0.2, 0.2);
+                                // color of mapping
+                                 glColor3f(0.0, 0.0, 0.0);
+                                
                                 glPushMatrix();
                                 glTranslated((Flt)j*dd+offx + 200, (Flt)i*lev.ftsz[1]+offy + 100, 0);
                                 glBegin(GL_QUADS);
@@ -1077,8 +1121,10 @@ void render(void)
                                         glVertex2i( 0, ty);
                                         glVertex2i(tx, ty);
                                         glVertex2i(tx,  0);
+     
                                 glEnd();
                                 glPopMatrix();
+                               
                         }
                         --row;
                 }

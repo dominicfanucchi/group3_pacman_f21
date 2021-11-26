@@ -40,6 +40,20 @@ typedef struct t_grid {
     float color[4];
 } Grid;
 
+typedef struct t_pacman {
+    int status;
+    int length;
+    int pos[MAX_GRID*MAX_GRID][2];
+    int direction;
+    double timer;
+    double delay;
+} Pac;
+//
+typedef struct t_pellet {
+    int status;
+    int pos[2];
+} Pellet;
+
 #define MAXBUTTONS 4
 typedef struct t_button {
     Rect r;
@@ -164,9 +178,12 @@ struct Global {
     int xres, yres;
     Grid grid[MAX_GRID][MAX_GRID];
     int gridDim;
+    Pac pacman;
+    Pellet pellets[100];
     int boardDim;
     int gameover;
     int winner;
+    int score;
     int show_credits;
     //Image *marbleImage;
     //GLuint marbleTexture;
@@ -182,6 +199,7 @@ struct Global {
         gameover = 0;
         winner = 0;
         nbuttons = 0;
+        int score = 0;
         //marbleImage=NULL;
         camera[0] = camera[1] = 0.0;
         show_credits = 0;
@@ -397,14 +415,50 @@ void initOpengl(void)
     //              0, GL_RGB, GL_UNSIGNED_BYTE, g.marbleImage->data);
 }
 
+
+// Kenneths work, translated snake to pacman and rats to pellets for 
+// our game
+
 void initPacman()
 {
+    int i;
+    g.pacman.status = 1;
+    g.pacman.delay = .15;
+    g.pacman.length = 1;
+    /*
+    for (i=0; i<g.snake.length; i++) {
+        g.snake.pos[i][0] = 2;
+        g.snake.pos[i][1] = 2;
+    }
+    */
+    g.pacman.direction = DIRECTION_RIGHT;
 
 }
+// Also Kenneth's work
+void initPellets()
+{
+
+    for (int i = 0; i<100; i++){
+        g.pellets[i].status = 1;
+        g.pellets[i].pos[0] = 30 - (i*3);
+        g.pellets[i].pos[1] = 10 +(i*2);
+    }
+    /*
+    g.pellets[0].status = 1;
+    g.[1].status = 1;
+    g.rats[0].pos[0] = 25;
+    g.rats[1].pos[0] = 12;
+    g.rats[0].pos[1] = 2;
+    g.rats[1].pos[1] = 23;
+    */
+}
+
 
 void init()
 {
     g.boardDim = g.gridDim * 10;
+    initPacman();
+    initPellets();
     //initialize buttons...
     g.nbuttons=0;
     //size and position
@@ -481,6 +535,11 @@ void init()
 
 void resetGame()
 {
+    initPacman();
+    initPellets();
+    g.score = 0;
+    g.gameover = 0;
+    g.winner = 0;
 }
 
 int checkKeys(XEvent *e)
@@ -504,23 +563,29 @@ int checkKeys(XEvent *e)
             resetGame();
             break;
         case XK_equal:
-            
+            g.pacman.delay *= 0.9;
+            if (g.pacman.delay < 0.001)
+                g.pacman.delay = 0.001;
+
             break;
         case XK_minus:
-            
+           g.pacman.delay *= (1.0 / 0.9);
             break;
+
         case XK_Left:
-            
+            g.pacman.direction = DIRECTION_LEFT;
             break;
         case XK_Right:
-            
+            g.pacman.direction = DIRECTION_RIGHT;
             break;
         case XK_Up:
-            
+            g.pacman.direction = DIRECTION_UP;
             break;
         case XK_Down:
-            
+            g.pacman.direction = DIRECTION_DOWN;
             break;
+
+          
         case XK_c:
             g.show_credits = 1;
 	    break;
@@ -614,14 +679,138 @@ void getGridCenter(const int i, const int j, int cent[2])
 
 void physics(void)
 {
+    
+int i;
+    if (g.gameover)
+        return;
+    //Is it time to move the snake?
+    static struct timespec snakeTime;
+    static int firsttime=1;
+    if (firsttime) {
+        firsttime=0;
+        clock_gettime(CLOCK_REALTIME, &snakeTime);
 
+     }
+    struct timespec tt;
+    clock_gettime(CLOCK_REALTIME, &tt);
+    double timeSpan = timeDiff(&snakeTime, &tt);
+    if (timeSpan < g.pacman.delay)
+        return;
+    timeCopy(&snakeTime, &tt);
+    //
+    //playSound(g.alSourceDrip);
+    //move the snake segments...
+    int headpos[2];
+    int newpos[2];
+    int oldpos[2];
+    //save the head position.
+    headpos[0] = g.pacman.pos[0][0];
+    headpos[1] = g.pacman.pos[0][1];
+    //pacman.direction:
+    //0=down
+    //1=left
+    //2=up
+    //3=right
+    switch (g.pacman.direction) {
+        case DIRECTION_DOWN:  g.pacman.pos[0][1] += 1; break;
+        case DIRECTION_LEFT:  g.pacman.pos[0][0] -= 1; break;
+        case DIRECTION_UP:    g.pacman.pos[0][1] -= 1; break;
+        case DIRECTION_RIGHT: g.pacman.pos[0][0] += 1; break;
+    }
+    //check for snake off board...
+    if (g.pacman.pos[0][0] < 0 ||
+        g.pacman.pos[0][0] > g.gridDim-1 ||
+        g.pacman.pos[0][1] < 0 ||
+        g.pacman.pos[0][1] > g.gridDim-1) {
+        g.gameover=1;
+        return;
+    }
+    /*
+    //check for snake crossing itself...
+    for (i=1; i<g.snake.length; i++) {
+        if (g.snake.pos[i][0] == g.snake.pos[0][0] &&
+            g.snake.pos[i][1] == g.snake.pos[0][1]) {
+            g.gameover=1;
+            return;
+        }
+    }
+    */
+    //
+    newpos[0] = headpos[0];
+    newpos[1] = headpos[1];
+    for (i=1; i<g.pacman.length; i++) {
+        oldpos[0] = g.pacman.pos[i][0];
+        oldpos[1] = g.pacman.pos[i][1];
+        if (g.pacman.pos[i][0] == newpos[0] &&
+            g.pacman.pos[i][1] == newpos[1])
+            break;
+        g.pacman.pos[i][0] = newpos[0];
+        g.pacman.pos[i][1] = newpos[1];
+        newpos[0] = oldpos[0];
+        newpos[1] = oldpos[1];
+    }
+    //did the snake eat the rat???
+
+    
+    
+    for (i=0; i <100; i++){
+        if (headpos[0] == g.pellets[i].pos[0] && headpos[1] == g.pellets[i].pos[1]) {
+            //yes, increase length of snake.
+            //playSound(g.alSourceTick);
+            if( g.pellets[i].status ==1){
+            g.score++;
+            g.pellets[i].status = 0;
+            }
+
+        //put new segment at end of snake.
+       /*
+        Log("snake ate rat. snake.length: %i   dir: %i\n",
+                                        g.snake.length,g.snake.direction);
+        int addlength = rand() % 4 + 4;
+        for (i=0; i<addlength; i++) {
+            g.snake.pos[g.snake.length][0] = g.snake.pos[g.snake.length-1][0];
+            g.snake.pos[g.snake.length][1] = g.snake.pos[g.snake.length-1][1];
+            g.snake.length++;
+        }
+       */
+        //new position for rat...
+        int collision=0;
+        int ntries=0;
+        while (1) {
+            //for (int j = 0; j<10; j++){
+            //g.rats[i].status = 0;
+            //g.rats[j].pos[0] = -1;
+            //g.rats[j].pos[1] = -1;
+
+            collision=0;
+            //}
+            for (i=0; i<g.pacman.length; i++) {
+                if (g.pellets[0].pos[0] == g.pacman.pos[i][0] &&
+                    g.pellets[0].pos[1] == g.pacman.pos[i][1]) {
+                    collision=1;
+                    break;
+                }
+            }
+
+            if (!collision) break;
+            if (++ntries > 1000000) break;
+
+
+        }
+     
+        return;
+
+
+        }
+    }
 }
+
 
 extern void show_dominics_credits(int x, int y);
 extern void show_andrew_credits(int x, int y);
 extern void show_kenneth_credits(int x, int y);
 extern void show_juan_credits(int, int);
-extern void mainDisplay(void);
+ extern void mainDisplay(void);
 extern void credit_screen(void);
 
 void render(void)
@@ -697,7 +886,7 @@ void render(void)
             ggprint16(&r, 0, g.button[i].text_color, g.button[i].text);
         }
     }
-    /*
+    
     //draw the main game board in middle of screen
     glColor3f(0.6f, 0.5f, 0.2f);
     glBegin(GL_QUADS);
@@ -706,29 +895,86 @@ void render(void)
         glVertex2i(s0+b2, s1+b2);
         glVertex2i(s0+b2, s1-b2);
     glEnd();
-    */
+    
     //
     //grid lines...
-    // int x0 = s0-b2;
-    // int x1 = s0+b2;
-    // int y0 = s1-b2;
-    // int y1 = s1+b2;
-    // glColor3f(0.1f, 0.1f, 0.1f);
-    // glBegin(GL_LINES);
-    // for (i=1; i<g.gridDim; i++) {
-    //     y0 += 10;
-    //     glVertex2i(x0,y0);
-    //     glVertex2i(x1,y0);
-    // }
-    // x0 = s0-b2;
-    // y0 = s1-b2;
-    // y1 = s1+b2;
-    // for (j=1; j<g.gridDim; j++) {
-    //     x0 += 10;
-    //     glVertex2i(x0,y0);
-    //     glVertex2i(x0,y1);
-    // }
-    // glEnd();
+     int x0 = s0-b2;
+     int x1 = s0+b2;
+     int y0 = s1-b2;
+     int y1 = s1+b2;
+     glColor3f(0.1f, 0.1f, 0.1f);
+     glBegin(GL_LINES);
+     for (i=1; i<g.gridDim; i++) {
+         y0 += 10;
+        glVertex2i(x0,y0);
+         glVertex2i(x1,y0);
+     }
+     x0 = s0-b2;
+     y0 = s1-b2;
+     y1 = s1+b2;
+     for (j=1; j<g.gridDim; j++) {
+         x0 += 10;
+         glVertex2i(x0,y0);
+         glVertex2i(x0,y1);
+     }
+     glEnd();
+    
+     
+     // draw Pacman
+    float c[3]={1.0f,1.0,0.5};
+    float rgb[3];
+    rgb[0] = -0.9 / (float)g.pacman.length;
+    rgb[2] = -0.45 / (float)g.pacman.length;
+    glColor3fv(c);
+    //
+    glBegin(GL_QUADS);
+    for (i=0; i<g.pacman.length; i++) {
+        getGridCenter(g.pacman.pos[i][1],g.pacman.pos[i][0],cent);
+        glVertex2i(cent[0]-4, cent[1]-3);
+        glVertex2i(cent[0]-4, cent[1]+4);
+        glVertex2i(cent[0]+3, cent[1]+4);
+        glVertex2i(cent[0]+3, cent[1]-3);
+        c[0] += rgb[0];
+        c[2] += rgb[2];
+        glColor3fv(c);
+    }
+    glEnd();
+   
+
+    glColor3f(0.1f, 0.8f, 0.1f);
+    glBegin(GL_QUADS);
+    for (i=0; i<g.pacman.length; i++) {
+        getGridCenter(g.pacman.pos[i][1],g.pacman.pos[i][0],cent);
+        glVertex2i(cent[0]-4, cent[1]-3);
+        glVertex2i(cent[0]-4, cent[1]+4);
+        glVertex2i(cent[0]+3, cent[1]+4);
+        glVertex2i(cent[0]+3, cent[1]-3);
+        glColor3f(0.0f, 0.6f, 0.0f);
+    }
+    glEnd();
+
+    //draw pellets...
+
+    for (i= 0; i<100; i++){
+        if( g.pellets[i].status ==1){
+    getGridCenter(g.pellets[i].pos[1],g.pellets[i].pos[0],cent);
+    //getGridCenter(g.rats[1].pos[1],g.rats[1].pos[0],cent);
+    glColor3f(0.4, 0.7f, 0.1f);
+    glBegin(GL_QUADS);
+    glVertex2i(cent[0]-4, cent[1]-3);
+    glVertex2i(cent[0]-4, cent[1]+4);
+    glVertex2i(cent[0]+3, cent[1]+4);
+    glVertex2i(cent[0]+3, cent[1]-3);
+    glEnd();
+        }
+    }
+    //
+    //
+    r.left   = g.xres/2;
+    r.bot    = g.yres-100;
+    r.center = 1;
+    ggprint16(&r, 16, 0x00ffffff, "score: %d", g.score);
+
 
 
 
@@ -774,7 +1020,7 @@ void render(void)
     }
 
     if (g.show_credits) {
-        credit_screen();
+        //credit_screen();
         // r.bot = g.yres -20;
         // r.left = 10;
         // r.center = 0;
