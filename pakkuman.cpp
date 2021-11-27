@@ -75,11 +75,11 @@ public:
     Flt tile_base;
     Level() {
         //Log("Level constructor\n");
-        tilesize[0] = 7;
-        tilesize[1] = 12;
+        tilesize[0] = 5;
+        tilesize[1] = 8;
         ftsz[0] = (Flt)tilesize[0];
         ftsz[1] = (Flt)tilesize[1];
-        tile_base = 25.0;
+        tile_base = 100;
         //read level
 
         FILE *fpi = fopen("map.txt","r");
@@ -195,7 +195,7 @@ struct Global {
     Global() {
         xres = 815;
         yres = 800;
-        gridDim = 40;
+        gridDim = 41;
         gameover = 0;
         winner = 0;
         nbuttons = 0;
@@ -425,12 +425,12 @@ void initPacman()
     g.pacman.status = 1;
     g.pacman.delay = .15;
     g.pacman.length = 1;
-    /*
-    for (i=0; i<g.snake.length; i++) {
-        g.snake.pos[i][0] = 2;
-        g.snake.pos[i][1] = 2;
+    
+    for (i=0; i<g.pacman.length; i++) {
+        g.pacman.pos[i][0] = 2;
+        g.pacman.pos[i][1] = 2;
     }
-    */
+    
     g.pacman.direction = DIRECTION_RIGHT;
 
 }
@@ -456,7 +456,7 @@ void initPellets()
 
 void init()
 {
-    g.boardDim = g.gridDim * 10;
+    g.boardDim = g.gridDim * 10.0;
     initPacman();
     initPellets();
     //initialize buttons...
@@ -999,6 +999,7 @@ void render(void)
     //offx: the offset to the left of the screen to start drawing tiles
     Flt offx = -dec * dd;
     //Log("gl.camera[0]: %lf   offx: %lf\n",gl.camera[0],offx);
+    
     for (int j=0; j<ncols_to_render; j++) {
         int row = lev.nrows-1;
         for (int i=0; i<lev.nrows; i++) {
@@ -1016,9 +1017,10 @@ void render(void)
                 }
                 --row;
             }
-    col = (col+1) % lev.ncols;
+        
+     col = (col+1) % lev.ncols;
     }
-
+    
     if (g.show_credits) {
         //credit_screen();
         // r.bot = g.yres -20;
