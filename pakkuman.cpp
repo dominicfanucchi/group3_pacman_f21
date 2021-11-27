@@ -438,7 +438,7 @@ void initPacman()
 void initPellets()
 {
 
-    for (int i = 0; i<100; i++){
+    for (int i = 0; i<10; i++){
         g.pellets[i].status = 1;
         g.pellets[i].pos[0] = 30 - (i*3);
         g.pellets[i].pos[1] = 10 +(i*2);
@@ -895,7 +895,7 @@ void render(void)
         glVertex2i(s0+b2, s1+b2);
         glVertex2i(s0+b2, s1-b2);
     glEnd();
-    
+    /*
     //
     //grid lines...
      int x0 = s0-b2;
@@ -918,7 +918,7 @@ void render(void)
          glVertex2i(x0,y1);
      }
      glEnd();
-    
+    */
      
      // draw Pacman
     float c[3]={1.0f,1.0,0.5};
