@@ -195,7 +195,7 @@ struct Global {
     Global() {
         xres = 815;
         yres = 800;
-        gridDim = 41;
+        gridDim = 40;
         gameover = 0;
         winner = 0;
         nbuttons = 0;
@@ -890,8 +890,8 @@ void render(void)
     //draw the main game board in middle of screen
     glColor3f(0.6f, 0.5f, 0.2f);
     glBegin(GL_QUADS);
-        glVertex2i(s0-b2, s1-b2);
-        glVertex2i(s0-b2, s1+b2);
+        glVertex2i(s0-b2-20, s1-b2);
+        glVertex2i(s0-b2-20, s1+b2);
         glVertex2i(s0+b2, s1+b2);
         glVertex2i(s0+b2, s1-b2);
     glEnd();
@@ -991,13 +991,13 @@ void render(void)
     //Partial tile offset must be determined here.
     //The leftmost tile might be partially off-screen.
     //cdd: camera position in terms of tiles.
-    Flt cdd = g.camera[0] / dd;
+    Flt cdd = g.camera[0] / dd-.05;
     //flo: just the integer portion
     Flt flo = floor(cdd);
     //dec: just the decimal portion
     Flt dec = (cdd - flo);
     //offx: the offset to the left of the screen to start drawing tiles
-    Flt offx = -dec * dd;
+    Flt offx = -dec * dd - 10;
     //Log("gl.camera[0]: %lf   offx: %lf\n",gl.camera[0],offx);
     
     for (int j=0; j<ncols_to_render; j++) {
