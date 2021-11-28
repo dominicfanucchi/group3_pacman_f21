@@ -665,7 +665,7 @@ void getGridCenter(const int i, const int j, int cent[2])
     //quad upper-left corner
     int quad[2];
     //bq is the width of one grid section
-    bq = (g.boardDim / g.gridDim);
+    bq = (g.boardDim / g.gridDim) ;
     //-------------------------------------
     //because y dimension is bottom-to-top in OpenGL.
     int i1 = g.gridDim - i - 1;
@@ -718,10 +718,10 @@ int i;
         case DIRECTION_RIGHT: g.pacman.pos[0][0] += 1; break;
     }
     //check for snake off board...
-    if (g.pacman.pos[0][0] < 0 ||
+    if (g.pacman.pos[0][0] < -2 ||
         g.pacman.pos[0][0] > g.gridDim-1 ||
-        g.pacman.pos[0][1] < 0 ||
-        g.pacman.pos[0][1] > g.gridDim-1) {
+        g.pacman.pos[0][1] < -4 ||
+        g.pacman.pos[0][1] > g.gridDim+4) {
         g.gameover=1;
         return;
     }
@@ -1033,3 +1033,4 @@ void render(void)
         // show_juan_credits(50, g.yres - 140);
     }
 }
+
