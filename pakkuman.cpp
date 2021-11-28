@@ -76,7 +76,7 @@ public:
     Level() {
         //Log("Level constructor\n");
         tilesize[0] = 5;
-        tilesize[1] = 8;
+        tilesize[1] = 10;
         ftsz[0] = (Flt)tilesize[0];
         ftsz[1] = (Flt)tilesize[1];
         tile_base = 100;
@@ -890,10 +890,10 @@ void render(void)
     //draw the main game board in middle of screen
     glColor3f(0.6f, 0.5f, 0.2f);
     glBegin(GL_QUADS);
-        glVertex2i(s0-b2-20, s1-b2);
-        glVertex2i(s0-b2-20, s1+b2);
-        glVertex2i(s0+b2, s1+b2);
-        glVertex2i(s0+b2, s1-b2);
+        glVertex2i(s0-b2-20, s1-(b2+50));
+        glVertex2i(s0-b2-20, s1+(b2+50));
+        glVertex2i(s0+b2, s1+(b2+50));
+        glVertex2i(s0+b2, s1-(b2+50));
     glEnd();
     /*
     //
@@ -984,7 +984,7 @@ void render(void)
     int tx = lev.tilesize[0];
     int ty = lev.tilesize[1];
     Flt dd = lev.ftsz[0];
-    Flt offy = lev.tile_base;
+    Flt offy = lev.tile_base-47;
     int ncols_to_render = 86;
     int col = (int)(g.camera[0] / dd);
     col = col % lev.ncols;
