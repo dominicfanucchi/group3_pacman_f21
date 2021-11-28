@@ -1,4 +1,3 @@
-//Dominic Fanucchi
 //program: dfanucchi.cpp
 //author: Dominic Fanucchi
 //date: September 2021
@@ -34,22 +33,26 @@ struct credits_screen
         x = 815;
         y = 800;
     }
-}c;
+} c;
 
 
 void credit_screen(int x, int y){
     glViewport(0, 0, c.x, c.y);
+    
     //clear color buffer
     glClearColor(0.5f, 0.2f, 0.3f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+    
     //init matrices
     glMatrixMode (GL_PROJECTION); glLoadIdentity();
     glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+    
     //this sets to 2D mode (no perspective)
     glOrtho(0, c.x, 0, c.y, -1, 1);
+    
     //screen background
     glColor3f(0.5f, 0.5f, 0.5f);
-    //glBindTexture(GL_TEXTURE_2D, g.marbleTexture);
+    
     glBegin(GL_QUADS);
         glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 0);
         glTexCoord2f(0.0f, 1.0f); glVertex2i(0, c.y);
@@ -61,7 +64,7 @@ void credit_screen(int x, int y){
 
 struct Sound 
 {
-		ALuint alBufferBeginning, alBufferChomp, alBufferDeath, alBufferEatFruit, alBufferEatGhost, alBufferExtraLife, alBufferIntermission; //pacman sound files
+	ALuint alBufferBeginning, alBufferChomp, alBufferDeath, alBufferEatFruit, alBufferEatGhost, alBufferExtraLife, alBufferIntermission; //pacman sound files
     ALuint alSourceBeginning, alSourceChomp, alSourceDeath, alSourceEatFruit, alSourceEatGhost, alSourceExtraLife, alSourceIntermission; //pacman sound files
 } s;
 
@@ -78,29 +81,29 @@ void initSound()
     
     //Setup the listener.
     //Forward and up vectors are used.
-    float vec[6] = {0.0f,0.0f,1.0f, 0.0f,1.0f,0.0f};
+    float vec[6] = {0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f};
     alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
     alListenerfv(AL_ORIENTATION, vec);
     alListenerf(AL_GAIN, 1.0f);
     
     //Buffer holds the sound information.
     //pacman sound files
-    g.alBufferBeginning = alutCreateBufferFromFile("./sounds/pacman_beginning.wav");
-    g.alBufferChomp = alutCreateBufferFromFile("./sounds/pacman_chomp.wav");
-    g.alBufferDeath = alutCreateBufferFromFile("./sounds/pacman_death.wav");
-    g.alBufferEatFruit = alutCreateBufferFromFile("./sounds/pacman_eatfruit.wav");
-    g.alBufferEatGhost = alutCreateBufferFromFile("./sounds/pacman_eatghost.wav");
-    g.alBufferIntermission = alutCreateBufferFromFile("./sounds/pacman_intermission.wav");
-    g.alBufferExtraLife = alutCreateBufferFromFile("./sounds/pacman_extrapac.wav");
+    s.alBufferBeginning = alutCreateBufferFromFile("./sounds/pacman_beginning.wav");
+    s.alBufferChomp = alutCreateBufferFromFile("./sounds/pacman_chomp.wav");
+    s.alBufferDeath = alutCreateBufferFromFile("./sounds/pacman_death.wav");
+    s.alBufferEatFruit = alutCreateBufferFromFile("./sounds/pacman_eatfruit.wav");
+    s.alBufferEatGhost = alutCreateBufferFromFile("./sounds/pacman_eatghost.wav");
+    s.alBufferIntermission = alutCreateBufferFromFile("./sounds/pacman_intermission.wav");
+    s.alBufferExtraLife = alutCreateBufferFromFile("./sounds/pacman_extrapac.wav");
     
     //Source refers to the sound.
     //Generate a source, and store it in a buffer.
-    alGenSources(1, &g.alSourceBeginning);
-    alSourcei(g.alSourceBeginning, AL_BUFFER, g.alBufferBeginning);
+    alGenSources(1, &s.alSourceBeginning);
+    alSourcei(s.alSourceBeginning, AL_BUFFER, s.alBufferBeginning);
     //Set volume and pitch to normal, looping of sound.
-    alSourcef(g.alSourceBeginning, AL_GAIN, 1.0f);
-    alSourcef(g.alSourceBeginning, AL_PITCH, 1.0f);
-    alSourcei(g.alSourceBeginning, AL_LOOPING, AL_TRUE);
+    alSourcef(s.alSourceBeginning, AL_GAIN, 1.0f);
+    alSourcef(s.alSourceBeginning, AL_PITCH, 1.0f);
+    alSourcei(s.alSourceBeginning, AL_LOOPING, AL_TRUE);
     if (alGetError() != AL_NO_ERROR) {
         printf("ERROR: setting source\n");
         return;
@@ -112,9 +115,9 @@ void cleanupSound()
 {
     #ifdef USE_OPENAL_SOUND
     //First delete the source.
-    alDeleteSources(1, &g.alSourceBeginning);
+    alDeleteSources(1, &s.alSourceBeginning);
     //Delete the buffer.
-    alDeleteBuffers(1, &g.alSourceBeginning);
+    alDeleteBuffers(1, &s.alSourceBeginning);
     //Close out OpenAL itself.
     //Get active context.
     ALCcontext *Context = alcGetCurrentContext();
@@ -135,112 +138,3 @@ void playSound(ALuint source)
     alSourcePlay(source);
     #endif //USE_OPENAL_SOUND
 }
-
-// void load_and_bind_textures()
-// {
-// 	glEnable(GL_BLEND);
-//     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-// 	maze_tex = load_and_bind_texture("images/maze.png");
-// }
-
-// unsigned int load_and_bind_texture(const char* filename)
-// {
-	
-// }
-
-// typedef enum {#, g, u} tile;
-// // Tile defined as an enum where each type is defined as:
-// // #: Wall
-// // g: Ghost Pen Gate
-// // u: Empty path
-// tile maze[28][31] =
-// {
-//     {#,#,#,#,#,#,#,#,#,#,#,#,u,u,u,#,u,#,u,u,u,#,#,#,#,#,#,#,#,#,#},
-//     {#,u,u,u,u,#,#,u,u,u,u,#,u,u,u,#,u,#,u,u,u,#,u,u,u,u,u,u,u,u,#},
-//     {#,u,#,#,u,#,#,u,#,#,u,#,u,u,u,#,u,#,u,u,u,#,u,#,#,u,#,#,#,u,#},
-//     {#,u,#,#,u,u,u,u,#,#,u,#,u,u,u,#,u,#,u,u,u,#,u,#,#,u,#,#,#,u,#},
-//     {#,u,#,#,u,#,#,#,#,#,u,#,u,u,u,#,u,#,u,u,u,#,u,#,#,u,#,#,#,u,#},
-//     {#,u,#,#,u,#,#,#,#,#,u,#,#,#,#,#,u,#,#,#,#,#,u,#,#,u,#,#,#,u,#},
-//     {#,u,#,#,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,#},
-//     {#,u,#,#,#,#,#,u,#,#,u,#,#,#,#,#,u,#,#,#,#,#,#,#,#,u,#,#,#,u,#},
-//     {#,u,#,#,#,#,#,u,#,#,u,#,#,#,#,#,u,#,#,#,#,#,#,#,#,u,#,#,#,u,#},
-//     {#,u,#,#,u,u,u,u,#,#,u,u,u,u,u,u,u,u,u,u,#,#,u,u,u,u,#,#,#,u,#},
-//     {#,u,#,#,u,#,#,u,#,#,u,#,#,u,#,#,#,#,#,u,#,#,u,#,#,u,#,#,#,u,#},
-//     {#,u,#,#,u,#,#,u,#,#,u,#,#,u,#,u,u,u,#,u,#,#,u,#,#,u,#,#,#,u,#},
-//     {#,u,u,u,u,#,#,u,u,u,u,#,#,u,#,u,u,u,#,u,u,u,u,#,#,u,u,u,u,u,#},
-//     {#,u,#,#,#,#,#,u,#,#,#,#,#,u,#,u,u,u,g,u,#,#,#,#,#,u,#,#,#,#,#},
-//     {#,u,#,#,#,#,#,u,#,#,#,#,#,u,#,u,u,u,g,u,#,#,#,#,#,u,#,#,#,#,#},
-//     {#,u,u,u,u,#,#,u,u,u,u,#,#,u,#,u,u,u,#,u,u,u,u,#,#,u,u,u,u,u,#},
-//     {#,u,#,#,u,#,#,u,#,#,u,#,#,u,#,u,u,u,#,u,#,#,u,#,#,u,#,#,#,u,#},
-//     {#,u,#,#,u,#,#,u,#,#,u,#,#,u,#,#,#,#,#,u,#,#,u,#,#,u,#,#,#,u,#},
-//     {#,u,#,#,u,u,u,u,#,#,u,u,u,u,u,u,u,u,u,u,#,#,u,u,u,u,#,#,#,u,#},
-//     {#,u,#,#,#,#,#,u,#,#,u,#,#,#,#,#,u,#,#,#,#,#,#,#,#,u,#,#,#,u,#},
-//     {#,u,#,#,#,#,#,u,#,#,u,#,#,#,#,#,u,#,#,#,#,#,#,#,#,u,#,#,#,u,#},
-//     {#,u,#,#,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,u,#},
-//     {#,u,#,#,u,#,#,#,#,#,u,#,#,#,#,#,u,#,#,#,#,#,u,#,#,u,#,#,#,u,#},
-//     {#,u,#,#,u,#,#,#,#,#,u,#,u,u,u,#,u,#,u,u,u,#,u,#,#,u,#,#,#,u,#},
-//     {#,u,#,#,u,u,u,u,#,#,u,#,u,u,u,#,u,#,u,u,u,#,u,#,#,u,#,#,#,u,#},
-//     {#,u,#,#,u,#,#,u,#,#,u,#,u,u,u,#,u,#,u,u,u,#,u,#,#,u,#,#,#,u,#},
-//     {#,u,u,u,u,#,#,u,u,u,u,#,u,u,u,#,u,#,u,u,u,#,u,u,u,u,u,u,u,u,#},
-//     {#,#,#,#,#,#,#,#,#,#,#,#,u,u,u,#,u,#,u,u,u,#,#,#,#,#,#,#,#,#,#}
-// };
-
-// void translate_to_maze_coords(float x, float y)
-// {
-//     glTranslatef(x * 8, y * 8, 0.0f);
-// }
-
-// void translate_bottom_left()
-// {
-//     glTranslatef(38.0f, 26.0f, 0.0f);
-// }
-
-// tile get_tile(float x, float y)
-// {
-//     return maze[(int) floor(x)][(int) floor(y)];
-// }
-
-// void drawMaze()
-// {
-//     glPushMatrix();
-//     translate_bottom_left();              // Translate to bottom left of screen
-//     draw_texture(maze_tex, 224, 248, 0);     // Draw the map walls using the sprite
-//     glPopMatrix();
-// }
-
-// void draw_texture(unsigned int texture, int length, int height, float angle)
-// {
-//     // Begin new transformation matrix
-//     glPushMatrix();
-//     glColor3f(1.0f, 1.0f, 1.0f);
-
-//     int widthCenter = length/2;
-//     int verticalCenter = height/2;
-
-//     // Translate to center of sprite to rotate about its origin (for sprites such as pacman)
-//     glTranslatef((float)widthCenter,(float)verticalCenter,0.0f);
-//     glRotatef(angle, 0.0f, 0.0f, 1.0f);
-
-//     // Enable texturing and bind the specific sprite
-//     glEnable(GL_TEXTURE_2D);
-//     glBindTexture(GL_TEXTURE_2D, texture);
-
-//     // texture coordinates
-//     glBegin(GL_QUADS);
-//         glTexCoord2f (0.0f, 0.0f);      // Lower left corner
-//         glTexCoord2f (1.0f, 0.0f);      // Lower right corner
-//         glTexCoord2f (1.0f, 1.0f);      // Upper right corner
-//         glTexCoord2f (0.0f, 1.0f);      // Upper left corner
-
-//         glVertex2i(-widthCenter, -verticalCenter);
-//         glVertex2i( widthCenter, -verticalCenter);
-//         glVertex2i( widthCenter,  verticalCenter);
-//         glVertex2i(-widthCenter,  verticalCenter);
-//     glEnd();
-
-//     glDisable(GL_TEXTURE_2D);
-
-//     // Pop matrix to ignore above transformations on future objects
-//     glPopMatrix();
-// }
