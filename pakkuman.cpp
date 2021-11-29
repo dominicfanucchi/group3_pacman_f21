@@ -40,6 +40,11 @@ typedef struct t_grid {
     float color[4];
 } Grid;
 
+typedef struct t_wall {
+    int status;
+    int pos[MAX_GRID*MAX_GRID][2];
+} Wall;
+
 typedef struct t_pacman {
     int status;
     int length;
@@ -180,6 +185,7 @@ struct Global {
     int gridDim;
     Pac pacman;
     Pellet pellets[100];
+    Wall walls[100];
     int boardDim;
     int gameover;
     int winner;
@@ -453,12 +459,28 @@ void initPellets()
     */
 }
 
+void initWalls()
+{
+    g.walls[0].pos[0][0] = 1;
+    g.walls[0].pos[0][1] = -1;
+   /*
+    for (int i=0; i<100; i++)
+    {
+        for (int j=1; j<4; j++)
+        {
+        g.walls[i].pos[0][0] = 1;
+        g.walls[i].pos[0][1] = -1+j;
+    }
+    } 
+   */ 
+}
 
 void init()
 {
     g.boardDim = g.gridDim * 10.0;
     initPacman();
     initPellets();
+    initWalls();
     //initialize buttons...
     g.nbuttons=0;
     //size and position
@@ -706,16 +728,39 @@ int i;
     //save the head position.
     headpos[0] = g.pacman.pos[0][0];
     headpos[1] = g.pacman.pos[0][1];
+    printf("\n%d %d", g.pacman.pos[0][0], g.pacman.pos[0][1]);
     //pacman.direction:
     //0=down
     //1=left
     //2=up
     //3=right
+    //for (int l = 0; l<100; l++){
     switch (g.pacman.direction) {
-        case DIRECTION_DOWN:  g.pacman.pos[0][1] += 1; break;
-        case DIRECTION_LEFT:  g.pacman.pos[0][0] -= 1; break;
-        case DIRECTION_UP:    g.pacman.pos[0][1] -= 1; break;
-        case DIRECTION_RIGHT: g.pacman.pos[0][0] += 1; break;
+        
+        case DIRECTION_DOWN:  g.pacman.pos[0][1] += 1;
+                              if((g.pacman.pos[0][1] == g.walls[0].pos[0][1])
+                                  && (g.pacman.pos[0][0] == g.walls[0].pos[0][0]))
+                                  g.pacman.pos[0][1] -= 1;
+                                  
+                              break;
+        case DIRECTION_LEFT:  g.pacman.pos[0][0] -= 1; 
+                              if((g.pacman.pos[0][0] == g.walls[0].pos[0][0])
+                                  && (g.pacman.pos[0][1] == g.walls[0].pos[0][1]))
+                                  g.pacman.pos[0][0] +=1;
+                              break;
+        case DIRECTION_UP:    g.pacman.pos[0][1] -= 1;
+                              if((g.pacman.pos[0][1] == g.walls[0].pos[0][1])
+                                      && g.pacman.pos[0][0] == g.walls[0].pos[0][0])
+                                  g.pacman.pos[0][1] += 1;
+                                  
+                              
+                              break;
+        case DIRECTION_RIGHT: g.pacman.pos[0][0] += 1; 
+                              if((g.pacman.pos[0][0] == g.walls[0].pos[0][0])
+                                && (g.pacman.pos[0][1] == g.walls[0].pos[0][1]))
+                                  g.pacman.pos[0][0] -= 1;
+                              break;
+    //} 
     }
     //check for snake off board...
     if (g.pacman.pos[0][0] < -2 ||
