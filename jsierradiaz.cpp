@@ -82,7 +82,7 @@ struct Welcome_Display {
 
 
     Welcome_Display() {
-        x = 800;
+        x = 815;
         y = 800;
 	mainDisplay=NULL;
 
@@ -158,10 +158,10 @@ void mainDisplay(void){
     glColor3f(0.5f, 0.5f, 0.5f);
     glBindTexture(GL_TEXTURE_2D, w.mainTexture);
     glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 0);
-        glTexCoord2f(0.0f, 1.0f); glVertex2i(0, w.y);
-        glTexCoord2f(1.0f, 1.0f); glVertex2i(w.x, w.y);
-        glTexCoord2f(1.0f, 0.0f); glVertex2i(w.x, 0);
+        glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+        glTexCoord2f(0.0f, 0.0f); glVertex2i(0, w.y);
+        glTexCoord2f(1.0f, 0.0f); glVertex2i(w.x, w.y);
+        glTexCoord2f(1.0f, 1.0f); glVertex2i(w.x, 0);
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
 
