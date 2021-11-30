@@ -184,7 +184,7 @@ struct Global {
     Grid grid[MAX_GRID][MAX_GRID];
     int gridDim;
     Pac pacman;
-    Pellet pellets[400];
+    Pellet pellets[2020];
     Wall vertPaths[100];
     Wall horPaths[100];
     int boardDim;
@@ -312,6 +312,7 @@ extern void cleanupSound();
 extern void playSound(ALuint source);
 #endif //USE_OPENAL_SOUND
 int quitGame();
+void drawPellets(int,int,int,int);
 
 
 //Setup timers
@@ -468,54 +469,38 @@ void initPacman()
 }
 // Also Kenneth's work
 // Juan Also contributed to this function
-void initPellets()
+//
+void drawPellets(int a, int b, int p,int d)
 {
 
-        for(int i = 0; i < 48; i++){
+        for(int i = a; i < b; i++){
 
                 g.pellets[i].status = 1;
-                g.pellets[i].pos[0] = -1;
-                g.pellets[i].pos[1] =-4+i;
+                g.pellets[i].pos[0] = p;
+                g.pellets[i].pos[1] =d+i;
 
         }
-        for(int i = 48; i < 96; i++){
+}
 
-                g.pellets[i].status = 1;
-                g.pellets[i].pos[0] = 0;
-                g.pellets[i].pos[1] =-52+i;
+void initPellets()
+{
+       
+        int count = -2;
+        int update = 0;
+        int column = 48;
+        int x = -4;
+        do{
 
-
-
-        }
-        for(int i = 96; i < 144; i++){
-
-                g.pellets[i].status = 1;
-                g.pellets[i].pos[0] = 1;
-                g.pellets[i].pos[1] =-100+i;
-
-        }
-
-
-        for(int i = 144; i < 192; i++){
-                g.pellets[i].status = 1;
-                g.pellets[i].pos[0] = 2;
-                g.pellets[i].pos[1] =-148+i;
+                drawPellets(update,column,count,x);
+                update = update + 48;
+                column = column + 48;
+                x = x - 48;
+                count++;
 
         }
+        while(count <= 39);
 
-        for(int i = 192; i < 240; i++){
-                g.pellets[i].status = 1;
-                g.pellets[i].pos[0] = 3;
-                g.pellets[i].pos[1] =-196+i;
 
-        }
-
-        for(int i = 240; i < 288; i++){
-                g.pellets[i].status = 1;
-                g.pellets[i].pos[0] = 7;
-                g.pellets[i].pos[1] =-244+i;
-
-        }
 
 
 }
@@ -906,7 +891,7 @@ int i;
 
     
     
-    for (i=0; i <1000; i++){
+    for (i=0; i <2020; i++){
         if (headpos[0] == g.pellets[i].pos[0] && headpos[1] == g.pellets[i].pos[1]) {
             //yes, increase length of snake.
             //playSound(g.alSourceTick);
@@ -1109,7 +1094,7 @@ void render(void)
     //draw pellets...
     //draw pellets...
 
-    for (i= 0; i<400; i++){
+    for (i= 0; i<2020; i++){
 
 
 
