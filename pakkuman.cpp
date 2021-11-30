@@ -184,7 +184,7 @@ struct Global {
     Grid grid[MAX_GRID][MAX_GRID];
     int gridDim;
     Pac pacman;
-    Pellet pellets[100];
+    Pellet pellets[400];
     Wall vertPaths[100];
     Wall horPaths[100];
     int boardDim;
@@ -467,22 +467,57 @@ void initPacman()
 
 }
 // Also Kenneth's work
+// Juan Also contributed to this function
 void initPellets()
 {
 
-    for (int i = 0; i<10; i++){
-        g.pellets[i].status = 1;
-        g.pellets[i].pos[0] = 30 - (i*3);
-        g.pellets[i].pos[1] = 10 +(i*2);
-    }
-    /*
-    g.pellets[0].status = 1;
-    g.[1].status = 1;
-    g.rats[0].pos[0] = 25;
-    g.rats[1].pos[0] = 12;
-    g.rats[0].pos[1] = 2;
-    g.rats[1].pos[1] = 23;
-    */
+        for(int i = 0; i < 48; i++){
+
+                g.pellets[i].status = 1;
+                g.pellets[i].pos[0] = -1;
+                g.pellets[i].pos[1] =-4+i;
+
+        }
+        for(int i = 48; i < 96; i++){
+
+                g.pellets[i].status = 1;
+                g.pellets[i].pos[0] = 0;
+                g.pellets[i].pos[1] =-52+i;
+
+
+
+        }
+        for(int i = 96; i < 144; i++){
+
+                g.pellets[i].status = 1;
+                g.pellets[i].pos[0] = 1;
+                g.pellets[i].pos[1] =-100+i;
+
+        }
+
+
+        for(int i = 144; i < 192; i++){
+                g.pellets[i].status = 1;
+                g.pellets[i].pos[0] = 2;
+                g.pellets[i].pos[1] =-148+i;
+
+        }
+
+        for(int i = 192; i < 240; i++){
+                g.pellets[i].status = 1;
+                g.pellets[i].pos[0] = 3;
+                g.pellets[i].pos[1] =-196+i;
+
+        }
+
+        for(int i = 240; i < 288; i++){
+                g.pellets[i].status = 1;
+                g.pellets[i].pos[0] = 7;
+                g.pellets[i].pos[1] =-244+i;
+
+        }
+
+
 }
 
 void initWalls()
@@ -871,7 +906,7 @@ int i;
 
     
     
-    for (i=0; i <100; i++){
+    for (i=0; i <1000; i++){
         if (headpos[0] == g.pellets[i].pos[0] && headpos[1] == g.pellets[i].pos[1]) {
             //yes, increase length of snake.
             //playSound(g.alSourceTick);
@@ -1072,20 +1107,31 @@ void render(void)
     glEnd();
 
     //draw pellets...
+    //draw pellets...
 
-    for (i= 0; i<100; i++){
-        if( g.pellets[i].status ==1){
-    getGridCenter(g.pellets[i].pos[1],g.pellets[i].pos[0],cent);
-    //getGridCenter(g.rats[1].pos[1],g.rats[1].pos[0],cent);
-    glColor3f(0.4, 0.7f, 0.1f);
-    glBegin(GL_QUADS);
-    glVertex2i(cent[0]-4, cent[1]-3);
-    glVertex2i(cent[0]-4, cent[1]+4);
-    glVertex2i(cent[0]+3, cent[1]+4);
-    glVertex2i(cent[0]+3, cent[1]-3);
-    glEnd();
-        }
+    for (i= 0; i<400; i++){
+
+
+
+            if( g.pellets[i].status ==1){
+
+						
+                    getGridCenter(g.pellets[i].pos[1],g.pellets[i].pos[0],cent);
+                    //getGridCenter(g.rats[1].pos[1],g.rats[1].pos[0],cent);
+                    glColor3f(0.4, 0.7f, 0.1f);
+                    //glPushMatrix();
+                     //glTranslated(200,200,0);
+                     glBegin(GL_QUADS);
+                     	glVertex2i(cent[0]-4, cent[1]-3);
+                        glVertex2i(cent[0]-4, cent[1]+4);
+                        glVertex2i(cent[0]+3, cent[1]+4);
+                        glVertex2i(cent[0]+3, cent[1]-3);
+                     glEnd();
+                     glPopMatrix();
+                }
     }
+
+    
     //
     //
     r.left   = g.xres/2;
