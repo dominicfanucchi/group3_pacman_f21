@@ -185,7 +185,8 @@ struct Global {
     int gridDim;
     Pac pacman;
     Pellet pellets[100];
-    Wall walls[100];
+    Wall vertPaths[100];
+    Wall horPaths[100];
     int boardDim;
     int gameover;
     int winner;
@@ -205,7 +206,6 @@ struct Global {
         gameover = 0;
         winner = 0;
         nbuttons = 0;
-        int score = 0;
         //marbleImage=NULL;
         camera[0] = camera[1] = 0.0;
         show_credits = 0;
@@ -421,6 +421,32 @@ void initOpengl(void)
     //              0, GL_RGB, GL_UNSIGNED_BYTE, g.marbleImage->data);
 }
 
+//Kenneth's work: Makes a horizontal path that pacman and ghosts
+//can travel on
+
+void makePathVertical(int xPos, int yStart, int yEnd)
+{
+    
+    int k = 0;
+    while (k<100){
+        g.vertPaths[k].pos[0][0] = xPos;
+        g.vertPaths[k].pos[0][1] = 1+k;
+      //  printf("\n%d,%d,%d", k ,g.walls[k].pos[0][0], g.walls[k].pos[0][1]);
+        k++;
+    }
+  
+}
+void makePathHorizontal(int yPos, int xStart, int xEnd)
+{
+
+    int c =0;
+    while (c<100){
+    g.horPaths[c].pos[0][0] = 1+c;
+    g.horPaths[c].pos[0][1] = yPos;
+    //printf("\n%d ,%d,%d",c,  g.walls[c].pos[0][0], g.walls[c].pos[0][1]);
+    c++;
+       }
+}
 
 // Kenneths work, translated snake to pacman and rats to pellets for 
 // our game
@@ -461,26 +487,56 @@ void initPellets()
 
 void initWalls()
 {
-    g.walls[0].pos[0][0] = 1;
-    g.walls[0].pos[0][1] = -1;
+
+   makePathHorizontal(2, -5, 39);
+   
+    makePathVertical(7, 0, 50);
+   
+  
+  /* 
+    int l = 101;
+   while (l<200){
+    g.walls[l].pos[0][0] = 7;
+    g.walls[l].pos[0][1] = 0+(l-100);
+    printf("\n %d, %d, %d", l, g.walls[l].pos[0][0], g.walls[l].pos[0][1]);
+    l++;
+   }
+    */
+   
    /*
-    for (int i=0; i<100; i++)
+    g.walls[100].pos[0][0] = 7;
+    g.walls[100].pos[0][1] = 2;
+    g.walls[101].pos[0][0] = 7;
+    g.walls[101].pos[0][1] = 3;
+    g.walls[102].pos[0][0] = 7;
+    g.walls[102].pos[0][1] = 1;
+   */
+
+
+
+    /*
+    for (int i=0; i<4; i++)
     {
         for (int j=1; j<4; j++)
         {
-        g.walls[i].pos[0][0] = 1;
-        g.walls[i].pos[0][1] = -1+j;
+        int count = j+(4*i);
+        g.walls[count-1].pos[0][0] = 1;
+        g.walls[count-1].pos[0][1] = 0-j;
+        count++;
+        printf("\n%d,%d",  g.walls[i].pos[0][0], g.walls[i].pos[0][1]);
+
     }
     } 
-   */ 
-}
 
+    */
+}
 void init()
 {
     g.boardDim = g.gridDim * 10.0;
+    initWalls();
     initPacman();
     initPellets();
-    initWalls();
+   
     //initialize buttons...
     g.nbuttons=0;
     //size and position
@@ -736,31 +792,48 @@ int i;
     //3=right
     //for (int l = 0; l<100; l++){
     switch (g.pacman.direction) {
-        
-        case DIRECTION_DOWN:  g.pacman.pos[0][1] += 1;
-                              if((g.pacman.pos[0][1] == g.walls[0].pos[0][1])
-                                  && (g.pacman.pos[0][0] == g.walls[0].pos[0][0]))
+        case DIRECTION_DOWN:  
+                              g.pacman.pos[0][1] += 1;
+                              for(int i = 0; i<100; i++){
+                              if((g.pacman.pos[0][1] != g.vertPaths[i].pos[0][1])
+                                  && (g.pacman.pos[0][0] != g.vertPaths[i].pos[0][0])){
                                   g.pacman.pos[0][1] -= 1;
-                                  
+                                  break;
+                              }
+                              }
                               break;
-        case DIRECTION_LEFT:  g.pacman.pos[0][0] -= 1; 
-                              if((g.pacman.pos[0][0] == g.walls[0].pos[0][0])
-                                  && (g.pacman.pos[0][1] == g.walls[0].pos[0][1]))
-                                  g.pacman.pos[0][0] +=1;
-                              break;
-        case DIRECTION_UP:    g.pacman.pos[0][1] -= 1;
-                              if((g.pacman.pos[0][1] == g.walls[0].pos[0][1])
-                                      && g.pacman.pos[0][0] == g.walls[0].pos[0][0])
-                                  g.pacman.pos[0][1] += 1;
-                                  
                               
+                              
+        case DIRECTION_LEFT:  g.pacman.pos[0][0] -= 1;
+                              for(int i = 0; i<100; i++){
+                              if((g.pacman.pos[0][0] != g.horPaths[i].pos[0][0])
+                                  && (g.pacman.pos[0][1] != g.horPaths[i].pos[0][1])){
+                                  g.pacman.pos[0][0] +=1;
+                                    break;
+                              }
+                              }
+                              break;
+                              
+        case DIRECTION_UP:    g.pacman.pos[0][1] -= 1;
+                              for(int i = 0; i<100; i++){
+                              if((g.pacman.pos[0][1] != g.vertPaths[i].pos[0][1])
+                                      && g.pacman.pos[0][0] != g.vertPaths[i].pos[0][0]){
+                                  g.pacman.pos[0][1] += 1;
+                              
+                                break;
+                              }
+                              } 
                               break;
         case DIRECTION_RIGHT: g.pacman.pos[0][0] += 1; 
-                              if((g.pacman.pos[0][0] == g.walls[0].pos[0][0])
-                                && (g.pacman.pos[0][1] == g.walls[0].pos[0][1]))
+                              for(int i =0; i<100; i++){
+                              if((g.pacman.pos[0][0] != g.horPaths[i].pos[0][0])
+                                && (g.pacman.pos[0][1] != g.horPaths[i].pos[0][1])){
                                   g.pacman.pos[0][0] -= 1;
+                                break;
+                              }
+                              }
                               break;
-    //} 
+     
     }
     //check for snake off board...
     if (g.pacman.pos[0][0] < -2 ||
