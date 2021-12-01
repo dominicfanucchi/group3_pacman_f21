@@ -87,7 +87,7 @@ public:
         tile_base = 100;
         //read level
 
-        FILE *fpi = fopen("map.txt","r");
+        FILE *fpi = fopen("map2.txt","r");
         if (fpi) {
             nrows=0;
             char line[100];
@@ -207,7 +207,6 @@ struct Global {
         gameover = 0;
         winner = 0;
         nbuttons = 0;
-        //marbleImage=NULL;
         camera[0] = camera[1] = 0.0;
         show_credits = 0;
     }
@@ -315,6 +314,7 @@ extern void playSound(ALuint source);
 #endif //USE_OPENAL_SOUND
 int quitGame();
 void drawPellets(int,int,int,int);
+void deletePellets();
 
 
 //Setup timers
@@ -502,10 +502,46 @@ void initPellets()
         }
         while(count <= 39);
 
+	deletePellets();
+
 
 
 
 }
+
+// Juan'work
+// This funcition would be use
+// to delete the unnecessary pellets in the paths
+// however it will take a lot of time given the
+// nature of how we pollulated the the pellets
+// in the map. We could possibly also find a more
+// efficent way to do it faster.
+void deletePellets(){
+
+
+        for(int i=0; i<48; i++){
+
+                g.pellets[i].status = 0;
+        }
+
+
+        int x_pos = 0;
+        int pellet_deleted = 737;
+        int update_pellet = 48;
+
+        do{
+                        for(int i=0; i<9; i++){
+
+                                g.pellets[pellet_deleted+i].status = 0;
+                        }
+                        x_pos++;
+                        pellet_deleted = update_pellet + pellet_deleted;
+
+        }while(x_pos <= 12);
+
+}
+
+
 
  int isValidHor(int y)
 {
@@ -1275,17 +1311,16 @@ void render(void)
 
 						
                     getGridCenter(g.pellets[i].pos[1],g.pellets[i].pos[0],cent);
-                    //getGridCenter(g.rats[1].pos[1],g.rats[1].pos[0],cent);
-                    glColor3f(0.4, 0.7f, 0.1f);
-                    //glPushMatrix();
-                     //glTranslated(200,200,0);
-                     glBegin(GL_QUADS);
+                    
+                    glColor3f(1.0, 1.0f, 0.0f);
+                 
+                    glBegin(GL_QUADS);
                      	glVertex2i(cent[0]-4, cent[1]-3);
                         glVertex2i(cent[0]-4, cent[1]+4);
                         glVertex2i(cent[0]+3, cent[1]+4);
                         glVertex2i(cent[0]+3, cent[1]-3);
-                     glEnd();
-                     glPopMatrix();
+                    glEnd();
+                    glPopMatrix();
                 }
     }
 
