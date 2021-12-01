@@ -87,7 +87,7 @@ public:
         tile_base = 100;
         //read level
 
-        FILE *fpi = fopen("map.txt","r");
+        FILE *fpi = fopen("map2.txt","r");
         if (fpi) {
             nrows=0;
             char line[100];
