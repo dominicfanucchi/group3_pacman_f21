@@ -187,6 +187,7 @@ struct Global {
     Pellet pellets[2020];
     Wall vertPaths[100];
     Wall horPaths[100];
+    int a,s,d,f,g,h,q,w,e,r,t,y;
     int boardDim;
     int gameover;
     int winner;
@@ -506,12 +507,13 @@ void initPellets()
 
 }
 
- int isValidHor(int x)
+ int isValidHor(int y)
 {
-        switch(x){
+        switch(y){
 case -4:
 case 2:
-case 11:
+case 22:
+case 12:
 case 37:
 case 7:
 case 17:
@@ -542,10 +544,79 @@ case 32:
       return false;
 
 }
-void initWalls()
+void horWalls(int y)
 {
 
-    makePathHorizontal(2, 3, 37,0);
+    switch (y){
+        case -4:
+            g.a = 18;
+            g.s = 20;
+            break;
+        case 2:
+            g.a = -2;
+            g.s = 40;
+            break;
+        case 7:
+            g.a = -2;
+            g.s = 8;
+            g.d = 18;
+            g.f = 19;
+            g.g = 28;
+            g.h = 31;
+            g.q = 40;
+            g.w = 10;
+            break;
+        case 12:
+            g.a =-2;
+            g.s = 6;
+            g.d = 8;
+            g.f = 28;
+            g.g = 31;
+            g.h= 33;
+            g.q = 11;
+            break;
+        case 17:
+            g.a = 26;
+            g.s = 13;
+            break;
+        case 22:
+            g.a = 6;
+            g.s = 8;
+            g.d = 11;
+            g.f = 28;
+            g.g = 31;
+            g.h = 33;
+            break;
+        case 27: 
+            g.a = -2;
+            g.s = 18; 
+            g.d = 20;
+            g.f = 40;
+            break;
+        case 32:
+            g.a = -2;
+            g.s = 3;
+            g.d = 6;
+            g.f = 33;
+            g.g = 36;
+            g.h = 40;
+            break;
+        case 37: 
+            g.a = -2;
+            g.s = 28;
+            g.d = 30;
+            g.f = 40;
+            g.g = 19;
+            g.h = 17;
+            g.q = 8;
+            g.w = 10;
+            break;
+        case 42:
+            g.a = -2;
+            g.s = 40;
+            break;
+    
+    }
    // makePathHorizontal(27, 6, 50,37);
    
    // makePathVertical(7, 0, 50);
@@ -591,9 +662,10 @@ void initWalls()
 void init()
 {
     g.boardDim = g.gridDim * 10.0;
-    initWalls();
+    //initWalls();
     initPacman();
-    initPellets();
+   // initPellets();
+   
    
     //initialize buttons...
     g.nbuttons=0;
@@ -848,7 +920,8 @@ int i;
     //1=left
     //2=up
     //3=right
-    //for (int l = 0; l<100; l++){
+    //Kenneths work, dear god i don't want to take credit for it though
+    //
     switch (g.pacman.direction) {
         case DIRECTION_DOWN:  if(isValidVert(g.pacman.pos[0][0])){
                                     g.pacman.pos[0][1] +=1;
@@ -872,11 +945,21 @@ int i;
                               
         case DIRECTION_LEFT:  if(isValidHor(g.pacman.pos[0][1])){
                                   g.pacman.pos[0][0] -=1;
-                              //  if(g.pacman.pos[0][0] == -2)
-                                //    g.pacman.pos[0][0] +=1;
+                                  g.a=-2;
+                                  g.s=-2;
+                                  g.d=-2;
+                                  g.f=40;
+                                  g.g=40;
+                                  g.h=40;
+                                  g.q=-2;
+                                  g.w=40;
+                                  horWalls(g.pacman.pos[0][1]);
+                                  if((g.pacman.pos[0][0] == g.a) || (g.pacman.pos[0][0] == g.s) || (g.pacman.pos[0][0] == g.d)
+                                           || (g.pacman.pos[0][0] == g.f) ||(g.pacman.pos[0][0] == g.g) ||(g.pacman.pos[0][0] == g.h)
+                                         ||  (g.pacman.pos[0][0] == g.q)|| (g.pacman.pos[0][0] == g.w))
+                                    g.pacman.pos[0][0] +=1;
                               }
-                                
-                                break;
+                              break;
     
                                /*
                               g.pacman.pos[0][0] -= 1;
@@ -913,8 +996,19 @@ int i;
         case DIRECTION_RIGHT: 
                               if(isValidHor(g.pacman.pos[0][1])){
                                   g.pacman.pos[0][0] +=1;
-                              //  if(g.pacman.pos[0][0] == 10)
-                              //      g.pacman.pos[0][0] -=1;
+                                  g.a=-2;
+                                  g.s=-2;
+                                  g.d=40;
+                                  g.f=40;
+                                  g.g=-2;
+                                  g.h=40;
+                                  g.q=-2;
+                                  g.w=40;
+                                  horWalls(g.pacman.pos[0][1]);
+                                  if((g.pacman.pos[0][0] == g.a) || (g.pacman.pos[0][0] == g.s) || (g.pacman.pos[0][0] == g.d)
+                                           || (g.pacman.pos[0][0] == g.f) ||(g.pacman.pos[0][0] == g.g) ||(g.pacman.pos[0][0] == g.h)
+                                         ||  (g.pacman.pos[0][0] == g.q)|| (g.pacman.pos[0][0] == g.w))
+                                    g.pacman.pos[0][0] -=1;
                               }
                               break;
                                 /*
@@ -932,13 +1026,16 @@ int i;
 
     }
     //check for snake off board...
+    /*
     if (g.pacman.pos[0][0] < -2 ||
         g.pacman.pos[0][0] > g.gridDim-1 ||
         g.pacman.pos[0][1] < -4 ||
         g.pacman.pos[0][1] > g.gridDim+4) {
         g.gameover=1;
         return;
+        
     }
+    */
     /*
     //check for snake crossing itself...
     for (i=1; i<g.snake.length; i++) {
