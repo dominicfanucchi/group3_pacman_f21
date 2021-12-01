@@ -299,6 +299,7 @@ public:
 void initOpengl(void);
 int checkMouse(XEvent *e);
 int checkKeys(XEvent *e);
+int isValidHor(int x);
 int toggleCredits(int credits);
 void init();
 extern void initSounds(void);
@@ -411,7 +412,7 @@ void initOpengl(void)
     
     //g.marbleImage = ppm6GetImage("./images/marble.ppm");
     //g.marbleImage = &img[0];
-    
+   
     //create opengl texture elements
     //glGenTextures(1, &g.marbleTexture);
     //glBindTexture(GL_TEXTURE_2D, g.marbleTexture);
@@ -437,14 +438,14 @@ void makePathVertical(int xPos, int yStart, int yEnd)
     }
   
 }
-void makePathHorizontal(int yPos, int xStart, int xEnd)
+void makePathHorizontal(int yPos, int xStart, int xEnd, int index)
 {
 
-    int c =0;
-    while (c<100){
-    g.horPaths[c].pos[0][0] = 1+c;
+    int c =index;
+    while (c<xEnd){
+    g.horPaths[c].pos[0][0] = xStart+c-index;
     g.horPaths[c].pos[0][1] = yPos;
-    //printf("\n%d ,%d,%d",c,  g.walls[c].pos[0][0], g.walls[c].pos[0][1]);
+    printf("\n%d ,%d,%d",c,  g.horPaths[c].pos[0][0], g.horPaths[c].pos[0][1]);
     c++;
        }
 }
@@ -505,13 +506,50 @@ void initPellets()
 
 }
 
+ int isValidHor(int x)
+{
+        switch(x){
+case -4:
+case 2:
+case 11:
+case 37:
+case 7:
+case 17:
+case 27:
+case 32:
+case 42:
+      return true;
+        }      
+      return false;
+
+}
+ int isValidVert(int x)
+{
+        switch(x){
+case 7:
+case -1:
+case 12:
+case 22:
+case 21:
+case 39:
+case 2:
+case 37:
+case 17:
+case 27:
+case 32:
+      return true;
+        }      
+      return false;
+
+}
 void initWalls()
 {
 
-   makePathHorizontal(2, -5, 39);
+    makePathHorizontal(2, 3, 37,0);
+   // makePathHorizontal(27, 6, 50,37);
    
-    makePathVertical(7, 0, 50);
-   
+   // makePathVertical(7, 0, 50);
+     
   
   /* 
     int l = 101;
@@ -812,7 +850,15 @@ int i;
     //3=right
     //for (int l = 0; l<100; l++){
     switch (g.pacman.direction) {
-        case DIRECTION_DOWN:  
+        case DIRECTION_DOWN:  if(isValidVert(g.pacman.pos[0][0])){
+                                    g.pacman.pos[0][1] +=1;
+                                 //   if(g.pacman.pos[0][1] == -2){
+                                   //     g.pacman.pos[0][1] -=1;
+                               // }
+                              }
+                              break;
+
+                            /*
                               g.pacman.pos[0][1] += 1;
                               for(int i = 0; i<100; i++){
                               if((g.pacman.pos[0][1] != g.vertPaths[i].pos[0][1])
@@ -822,19 +868,38 @@ int i;
                               }
                               }
                               break;
+                             */ 
                               
-                              
-        case DIRECTION_LEFT:  g.pacman.pos[0][0] -= 1;
-                              for(int i = 0; i<100; i++){
+        case DIRECTION_LEFT:  if(isValidHor(g.pacman.pos[0][1])){
+                                  g.pacman.pos[0][0] -=1;
+                              //  if(g.pacman.pos[0][0] == -2)
+                                //    g.pacman.pos[0][0] +=1;
+                              }
+                                
+                                break;
+    
+                               /*
+                              g.pacman.pos[0][0] -= 1;
+                              for(int i = 0; i<37; i++){
                               if((g.pacman.pos[0][0] != g.horPaths[i].pos[0][0])
-                                  && (g.pacman.pos[0][1] != g.horPaths[i].pos[0][1])){
+                                    && (g.pacman.pos[0][1] != g.horPaths[i].pos[0][1])){
                                   g.pacman.pos[0][0] +=1;
                                     break;
                               }
                               }
-                              break;
+                               break;
+                               */
                               
-        case DIRECTION_UP:    g.pacman.pos[0][1] -= 1;
+        case DIRECTION_UP:    
+                                if(isValidVert(g.pacman.pos[0][0])){
+                                    g.pacman.pos[0][1] -=1;
+                                //    if(g.pacman.pos[0][1] == -2){
+                                  //      g.pacman.pos[0][1] +=1;
+                              //  }
+                              }
+                                break;
+                              /*
+                               g.pacman.pos[0][1] -= 1;
                               for(int i = 0; i<100; i++){
                               if((g.pacman.pos[0][1] != g.vertPaths[i].pos[0][1])
                                       && g.pacman.pos[0][0] != g.vertPaths[i].pos[0][0]){
@@ -844,16 +909,27 @@ int i;
                               }
                               } 
                               break;
-        case DIRECTION_RIGHT: g.pacman.pos[0][0] += 1; 
-                              for(int i =0; i<100; i++){
-                              if((g.pacman.pos[0][0] != g.horPaths[i].pos[0][0])
-                                && (g.pacman.pos[0][1] != g.horPaths[i].pos[0][1])){
+                              */
+        case DIRECTION_RIGHT: 
+                              if(isValidHor(g.pacman.pos[0][1])){
+                                  g.pacman.pos[0][0] +=1;
+                              //  if(g.pacman.pos[0][0] == 10)
+                              //      g.pacman.pos[0][0] -=1;
+                              }
+                              break;
+                                /*
+                               *
+                              g.pacman.pos[0][0] += 1; 
+                              for(int i =0; i<37; i++){                                 
+                              if((g.pacman.pos[0][0] != g.horPaths[i].pos[0][0])){
+                                //&& (g.pacman.pos[0][1] != g.horPaths[i].pos[0][1])){
                                   g.pacman.pos[0][0] -= 1;
                                 break;
                               }
                               }
                               break;
-     
+                                */
+
     }
     //check for snake off board...
     if (g.pacman.pos[0][0] < -2 ||
