@@ -664,7 +664,7 @@ void init()
     g.boardDim = g.gridDim * 10.0;
     //initWalls();
     initPacman();
-   // initPellets();
+    initPellets();
    
    
     //initialize buttons...
