@@ -454,6 +454,8 @@ void initGhost()
 {
 	g.ghost.status = 1;
 	g.ghost.length = 1;
+    g.ghost.eaten = false;
+
 }
 
 // Kenneths work, translated snake to pacman and rats to pellets for our game
@@ -1264,7 +1266,10 @@ void render(void)
         }
     }
 
-    // draw purple ghost
+    // draw purple ghost, even though purple is not a standard color
+    glColor3f(0.5f, 0.0f, 0.5f);
+    glBegin(GL_QUADS);
+    glEnd();
 
 
      // draw Pacman
