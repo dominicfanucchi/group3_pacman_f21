@@ -424,8 +424,8 @@ void initOpengl(void)
     //              0, GL_RGB, GL_UNSIGNED_BYTE, g.marbleImage->data);
 }
 
-//Kenneth's work: Makes a horizontal path that pacman and ghosts
-//can travel on
+/*Kenneth's work: Makes a horizontal path that pacman and ghosts
+//can travel on. Ended up not being used but was how i started the paths.
 
 void makePathVertical(int xPos, int yStart, int yEnd)
 {
@@ -439,6 +439,7 @@ void makePathVertical(int xPos, int yStart, int yEnd)
     }
   
 }
+
 void makePathHorizontal(int yPos, int xStart, int xEnd, int index)
 {
 
@@ -450,6 +451,8 @@ void makePathHorizontal(int yPos, int xStart, int xEnd, int index)
     c++;
        }
 }
+*/
+
 
 // Kenneths work, translated snake to pacman and rats to pellets for 
 // our game
@@ -1074,14 +1077,14 @@ int i;
                               
         case DIRECTION_LEFT:  if(isValidHor(g.pacman.pos[0][1])){
                                   g.pacman.pos[0][0] -=1;
-                                  g.a=-2;
-                                  g.s=-2;
-                                  g.d=-2;
-                                  g.f=40;
-                                  g.g=40;
-                                  g.h=40;
-                                  g.q=-2;
-                                  g.w=40;
+                                  g.a=-5;
+                                  g.s=-5;
+                                  g.d=-5;
+                                  g.f=43;
+                                  g.g=43;
+                                  g.h=43;
+                                  g.q=-5;
+                                  g.w=43;
                                   horWalls(g.pacman.pos[0][1]);
                                   if((g.pacman.pos[0][0] == g.a) || (g.pacman.pos[0][0] == g.s) || (g.pacman.pos[0][0] == g.d)
                                            || (g.pacman.pos[0][0] == g.f) ||(g.pacman.pos[0][0] == g.g) ||(g.pacman.pos[0][0] == g.h)
@@ -1116,14 +1119,14 @@ int i;
         case DIRECTION_RIGHT: 
                               if(isValidHor(g.pacman.pos[0][1])){
                                   g.pacman.pos[0][0] +=1;
-                                  g.a=-2;
-                                  g.s=-2;
-                                  g.d=40;
-                                  g.f=40;
-                                  g.g=-2;
-                                  g.h=40;
-                                  g.q=-2;
-                                  g.w=40;
+                                  g.a=-5;
+                                  g.s=-5;
+                                  g.d=43;
+                                  g.f=43;
+                                  g.g=-5;
+                                  g.h=43;
+                                  g.q=-5;
+                                  g.w=43;
                                   horWalls(g.pacman.pos[0][1]);
                                   if((g.pacman.pos[0][0] == g.a) || (g.pacman.pos[0][0] == g.s) || (g.pacman.pos[0][0] == g.d)
                                            || (g.pacman.pos[0][0] == g.f) ||(g.pacman.pos[0][0] == g.g) ||(g.pacman.pos[0][0] == g.h)
@@ -1214,7 +1217,7 @@ extern void credit_screen(void);
 
 void render(void)
 {
-    int i,j;
+    int i;
     Rect r;
     //--------------------------------------------------------
     //This code is repeated several times in this program, so
