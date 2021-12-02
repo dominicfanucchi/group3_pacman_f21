@@ -52,14 +52,23 @@ typedef struct t_pacman {
     double delay;
 } Pac;
 
+
+// GHOST MOVEMENT TYPE
+enum movement {SCATTER, CHASE, DEATH, PEN};
+//TODO: WRITE OUT ALGORITHMS FOR DIFFERENT GHOST MOVEMENTS
+
 typedef struct t_ghost
 {
 	int status;
 	int length;
-	int route;
+    int ghostX;
+    int ghostY;
+	movement route;
+    bool eaten;
 	double time;
 	double delay;
 } Ghost;
+
 
 typedef struct t_pellet {
     int status;
@@ -311,6 +320,7 @@ int checkKeys(XEvent *e);
 int toggleCredits(int credits);
 void init();
 extern void initSounds(void);
+extern void setHighScore(int score);
 void physics(void);
 extern void mainDisplay(void);
 void render(void);
@@ -439,7 +449,7 @@ void initOpengl(void)
     //              0, GL_RGB, GL_UNSIGNED_BYTE, g.marbleImage->data);
 }
 
-// Dominics work, modeled after Pacman to create a ghost in a corner of the map
+// Dominics work, modeled after initPacman() to create a ghost in a corner of the map
 void initGhost()
 {
 	g.ghost.status = 1;
@@ -824,6 +834,7 @@ void resetGame()
     initPacman();
     initGhost();
     initPellets();
+    setHighScore(g.score);
     g.score = 0;
     g.gameover = 0;
     g.winner = 0;
