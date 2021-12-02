@@ -34,7 +34,7 @@ struct credits_screen
     }
 } c;
 
-void credit_screen(int x, int y)
+void credit_screen()
 {
     glViewport(0, 0, c.x, c.y);
     
