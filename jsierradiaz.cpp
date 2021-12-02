@@ -178,3 +178,55 @@ void mainDisplay(void){
 }
 
 
+/*
+I moved this funcion to the main file
+This funcition would be use
+to delete the unnecessary pellets in the paths
+however it will take a lot of time given the
+nature of how we pollulated the the pellets
+in the map. We could possibly also find a more
+efficent way to do it faster.
+void deletePellets() {
+    for(int i=0; i<48; i++) {
+        g.pellets[i].status = 0;
+    }
+    int x_pos = 0;
+    int pellet_deleted = 737;
+    int update_pellet_pos = 48;
+    do {
+        for(int i=0; i<9; i++) {
+                g.pellets[pellet_deleted+i].status = 0;
+        }
+        x_pos++;
+        pellet_deleted = update_pellet_pos + pellet_deleted;
+
+    } while(x_pos <= 13);
+
+}
+*/
+
+/*
+This function was also moved to the main file
+void drawPellets(int a, int b, int p,int d)
+{
+
+        for(int i = a; i < b; i++){
+
+                g.pellets[i].status = 1;
+                g.pellets[i].pos[0] = p;
+                g.pellets[i].pos[1] =d+i;
+
+        }
+}
+*/
+
+
+
+
+
+
+
+
+
+
+

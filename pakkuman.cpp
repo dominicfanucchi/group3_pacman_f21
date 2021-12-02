@@ -522,6 +522,11 @@ void deletePellets() {
         }
         x_pos++;
         pellet_deleted = update_pellet_pos + pellet_deleted;
+<<<<<<< HEAD
+=======
+
+    } while(x_pos <= 13);
+>>>>>>> ebd6745adf101b608a4cd85610c3cae2bd9807d0
 
     } while(x_pos <= 13);
 }
