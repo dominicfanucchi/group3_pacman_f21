@@ -7,6 +7,7 @@
 #include <X11/Xlib.h>
 #include <GL/glx.h>
 #include <iostream>
+#include <fstream>
 #define USE_OPENAL_SOUND
 #ifdef USE_OPENAL_SOUND
 #include </usr/include/AL/alut.h>
