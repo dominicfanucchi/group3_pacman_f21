@@ -298,7 +298,6 @@ public:
 void initOpengl(void);
 int checkMouse(XEvent *e);
 int checkKeys(XEvent *e);
-int isValidHor(int x);
 int toggleCredits(int credits);
 void init();
 extern void initSounds(void);
@@ -422,34 +421,7 @@ void initOpengl(void)
     //              0, GL_RGB, GL_UNSIGNED_BYTE, g.marbleImage->data);
 }
 
-/*Kenneth's work: Makes a horizontal path that pacman and ghosts
-//can travel on. Ended up not being used but was how i started the paths.
 
-void makePathVertical(int xPos, int yStart, int yEnd)
-{
-    
-    int k = 0;
-    while (k<100){
-        g.vertPaths[k].pos[0][0] = xPos;
-        g.vertPaths[k].pos[0][1] = 1+k;
-      //  printf("\n%d,%d,%d", k ,g.walls[k].pos[0][0], g.walls[k].pos[0][1]);
-        k++;
-    }
-  
-}
-
-void makePathHorizontal(int yPos, int xStart, int xEnd, int index)
-{
-
-    int c =index;
-    while (c<xEnd){
-    g.horPaths[c].pos[0][0] = xStart+c-index;
-    g.horPaths[c].pos[0][1] = yPos;
-    printf("\n%d ,%d,%d",c,  g.horPaths[c].pos[0][0], g.horPaths[c].pos[0][1]);
-    c++;
-       }
-}
-*/
 
 
 // Kenneths work, translated snake to pacman and rats to pellets for 
@@ -536,52 +508,57 @@ void deletePellets() {
         }
         x_pos++;
         pellet_deleted = update_pellet + pellet_deleted;
-<<<<<<< HEAD
+
     } while(x_pos <= 12);
-=======
-    } while(x_pos <= 13);
->>>>>>> 391608e4d86c636247de7522013d358f4baac063
+
 }
 
+//Tests to see if a value is valid as a horizontal
+//row to move on. Kenneth's work
 
-
-int isValidHor(int y)
+bool isValidHor(int y)
 {
         switch(y){
-case -4:
-case 2:
-case 22:
-case 12:
-case 37:
-case 7:
-case 17:
-case 27:
-case 32:
-case 42:
-      return true;
+            case -4:
+            case 2:
+            case 22:
+            case 12:    
+            case 37:
+            case 7:
+            case 17:
+            case 27:
+            case 32:
+            case 42:
+            return true;
         }      
       return false;
 
 }
- int isValidVert(int x)
+
+//Tests to see if a value is valid as a vertical row to 
+//move on, Kenneth's work
+ bool isValidVert(int x)
 {
-        switch(x){
-case 7:
-case -1:
-case 12:
-case 22:
-case 21:
-case 39:
-case 2:
-case 37:
-case 17:
-case 27:
-case 32:
-      return true;
+     switch(x){
+        case 7:
+        case -1:
+        case 12:
+        case 22:
+        case 21:
+        case 39:
+        case 2:
+        case 37:
+        case 17:
+        case 27:
+        case 32:
+            return true;
         }      
       return false;
 
 }
+
+//List of wall positions to test collision against
+//Kenneth's work
 void horWalls(int y)
 {
 
@@ -654,8 +631,11 @@ void horWalls(int y)
             g.s = 40;
             break;
     
- }
 }
+}
+
+//List of vertical walls
+
 void vertWalls(int x){
     switch(x){
         case 7:
@@ -747,54 +727,13 @@ void vertWalls(int x){
             g.g = 43;
             g.h = -5;
             break;
- }
-
-  
-  /* 
-    int l = 101;
-   while (l<200){
-    g.walls[l].pos[0][0] = 7;
-    g.walls[l].pos[0][1] = 0+(l-100);
-    printf("\n %d, %d, %d", l, g.walls[l].pos[0][0], g.walls[l].pos[0][1]);
-    l++;
-   }
-    */
-   
-   /*
-    g.walls[100].pos[0][0] = 7;
-    g.walls[100].pos[0][1] = 2;
-    g.walls[101].pos[0][0] = 7;
-    g.walls[101].pos[0][1] = 3;
-    g.walls[102].pos[0][0] = 7;
-    g.walls[102].pos[0][1] = 1;
-   */
-
-
-
-    /*
-    for (int i=0; i<4; i++)
-    {
-        for (int j=1; j<4; j++)
-        {
-        int count = j+(4*i);
-        g.walls[count-1].pos[0][0] = 1;
-        g.walls[count-1].pos[0][1] = 0-j;
-        count++;
-        printf("\n%d,%d",  g.walls[i].pos[0][0], g.walls[i].pos[0][1]);
-
-    }
-    } 
-
-    */
+ }  
 }
 void init()
 {
     g.boardDim = g.gridDim * 10.0;
-    //initWalls();
     initPacman();
     initPellets();
-   
-   
     //initialize buttons...
     g.nbuttons=0;
     //size and position
@@ -1052,7 +991,7 @@ int i;
     //
     switch (g.pacman.direction) {
         case DIRECTION_DOWN:  if(isValidVert(g.pacman.pos[0][0])){
-                                    g.pacman.pos[0][1] +=1;
+                                  g.pacman.pos[0][1] +=1;
                                   g.a=-5;
                                   g.s=-5;
                                   g.d=-5;
@@ -1065,10 +1004,10 @@ int i;
                                   g.r = 43;
                                   vertWalls(g.pacman.pos[0][0]);
                                   if((g.pacman.pos[0][1] == g.a) || (g.pacman.pos[0][1] == g.s) || (g.pacman.pos[0][1] == g.d)
-                                           || (g.pacman.pos[0][1] == g.f) ||(g.pacman.pos[0][1] == g.g) ||(g.pacman.pos[0][1] == g.h)
-                                         ||  (g.pacman.pos[0][1] == g.q)|| (g.pacman.pos[0][1] == g.w) || (g.pacman.pos[0][1] == g.e) 
-                                         || (g.pacman.pos[0][1] == g.r))
-                                    g.pacman.pos[0][1] -=1;
+                                             || (g.pacman.pos[0][1] == g.f) ||(g.pacman.pos[0][1] == g.g) ||(g.pacman.pos[0][1] == g.h)
+                                             ||  (g.pacman.pos[0][1] == g.q)|| (g.pacman.pos[0][1] == g.w) || (g.pacman.pos[0][1] == g.e) 
+                                             || (g.pacman.pos[0][1] == g.r))
+                                            g.pacman.pos[0][1] -=1;
                               }
                               break;
 
@@ -1087,7 +1026,7 @@ int i;
                                   g.w=43;
                                   horWalls(g.pacman.pos[0][1]);
                                   if (g.pacman.pos[0][0] == -3 && g.pacman.pos[0][1] == 17)
-                                     g.pacman.pos[0][0] = 39;
+                                        g.pacman.pos[0][0] = 39;
                                   if((g.pacman.pos[0][0] == g.a) || (g.pacman.pos[0][0] == g.s) || (g.pacman.pos[0][0] == g.d)
                                             || (g.pacman.pos[0][0] == g.f) ||(g.pacman.pos[0][0] == g.g) ||(g.pacman.pos[0][0] == g.h)
                                             ||  (g.pacman.pos[0][0] == g.q)|| (g.pacman.pos[0][0] == g.w))
@@ -1101,7 +1040,6 @@ int i;
         case DIRECTION_UP:    
                                 if(isValidVert(g.pacman.pos[0][0])){
                                   g.pacman.pos[0][1] -=1;
-                                   
                                   g.a=-5;
                                   g.s=-5;
                                   g.d=-5;
@@ -1114,10 +1052,10 @@ int i;
                                   g.r = 43;
                                   vertWalls(g.pacman.pos[0][0]);
                                   if((g.pacman.pos[0][1] == g.a) || (g.pacman.pos[0][1] == g.s) || (g.pacman.pos[0][1] == g.d)
-                                           || (g.pacman.pos[0][1] == g.f) ||(g.pacman.pos[0][1] == g.g) ||(g.pacman.pos[0][1] == g.h)
-                                         ||  (g.pacman.pos[0][1] == g.q)|| (g.pacman.pos[0][1] == g.w) || (g.pacman.pos[0][1] == g.e) 
-                                         || (g.pacman.pos[0][1] == g.r))
-                                    g.pacman.pos[0][1] +=1;
+                                            || (g.pacman.pos[0][1] == g.f) ||(g.pacman.pos[0][1] == g.g) ||(g.pacman.pos[0][1] == g.h)
+                                            ||  (g.pacman.pos[0][1] == g.q)|| (g.pacman.pos[0][1] == g.w) || (g.pacman.pos[0][1] == g.e) 
+                                            || (g.pacman.pos[0][1] == g.r))
+                                            g.pacman.pos[0][1] +=1;
                               }
                               break;
 
@@ -1135,10 +1073,10 @@ int i;
                                   horWalls(g.pacman.pos[0][1]);
                                 if (g.pacman.pos[0][0] == 38 && g.pacman.pos[0][1] == 17)
                                     g.pacman.pos[0][0] = -3;
-                                  if((g.pacman.pos[0][0] == g.a) || (g.pacman.pos[0][0] == g.s) || (g.pacman.pos[0][0] == g.d)
-                                           || (g.pacman.pos[0][0] == g.f) ||(g.pacman.pos[0][0] == g.g) ||(g.pacman.pos[0][0] == g.h)
-                                         ||  (g.pacman.pos[0][0] == g.q)|| (g.pacman.pos[0][0] == g.w))
-                                    g.pacman.pos[0][0] -=1;
+                                if((g.pacman.pos[0][0] == g.a) || (g.pacman.pos[0][0] == g.s) || (g.pacman.pos[0][0] == g.d)
+                                             || (g.pacman.pos[0][0] == g.f) ||(g.pacman.pos[0][0] == g.g) ||(g.pacman.pos[0][0] == g.h)
+                                             ||  (g.pacman.pos[0][0] == g.q)|| (g.pacman.pos[0][0] == g.w))
+                                             g.pacman.pos[0][0] -=1;
                               }
                               break;
 
@@ -1158,9 +1096,9 @@ int i;
         newpos[0] = oldpos[0];
         newpos[1] = oldpos[1];
     }
-    //did the snake eat the rat???
-
     
+
+    //did pacman eat pellet?
     
     for (i=0; i <2020; i++){
         if (headpos[0] == g.pellets[i].pos[0] && headpos[1] == g.pellets[i].pos[1]) {
@@ -1171,28 +1109,13 @@ int i;
             g.pellets[i].status = 0;
             }
 
-        //put new segment at end of snake.
-       /*
-        Log("snake ate rat. snake.length: %i   dir: %i\n",
-                                        g.snake.length,g.snake.direction);
-        int addlength = rand() % 4 + 4;
-        for (i=0; i<addlength; i++) {
-            g.snake.pos[g.snake.length][0] = g.snake.pos[g.snake.length-1][0];
-            g.snake.pos[g.snake.length][1] = g.snake.pos[g.snake.length-1][1];
-            g.snake.length++;
-        }
-       */
+        
         //new position for rat...
         int collision=0;
         int ntries=0;
         while (1) {
-            //for (int j = 0; j<10; j++){
-            //g.rats[i].status = 0;
-            //g.rats[j].pos[0] = -1;
-            //g.rats[j].pos[1] = -1;
-
+           
             collision=0;
-            //}
             for (i=0; i<g.pacman.length; i++) {
                 if (g.pellets[0].pos[0] == g.pacman.pos[i][0] &&
                     g.pellets[0].pos[1] == g.pacman.pos[i][1]) {
@@ -1219,7 +1142,7 @@ extern void show_dominics_credits(int x, int y);
 extern void show_andrew_credits(int x, int y);
 extern void show_kenneth_credits(int x, int y);
 extern void show_juan_credits(int, int);
- extern void mainDisplay(void);
+extern void mainDisplay(void);
 extern void credit_screen(void);
 
 void render(void)
@@ -1304,30 +1227,7 @@ void render(void)
         glVertex2i(s0+b2, s1+(b2+50));
         glVertex2i(s0+b2, s1-(b2+50));
     glEnd();
-    /*
-    //
-    //grid lines...
-     int x0 = s0-b2;
-     int x1 = s0+b2;
-     int y0 = s1-b2;
-     int y1 = s1+b2;
-     glColor3f(0.1f, 0.1f, 0.1f);
-     glBegin(GL_LINES);
-     for (i=1; i<g.gridDim; i++) {
-         y0 += 10;
-        glVertex2i(x0,y0);
-         glVertex2i(x1,y0);
-     }
-     x0 = s0-b2;
-     y0 = s1-b2;
-     y1 = s1+b2;
-     for (j=1; j<g.gridDim; j++) {
-         x0 += 10;
-         glVertex2i(x0,y0);
-         glVertex2i(x0,y1);
-     }
-     glEnd();
-    */
+    
      
      // draw Pacman
     float c[3]={1.0f,1.0,0.5};
@@ -1335,7 +1235,7 @@ void render(void)
     rgb[0] = -0.9 / (float)g.pacman.length;
     rgb[2] = -0.45 / (float)g.pacman.length;
     glColor3fv(c);
-    //
+    
     glBegin(GL_QUADS);
     for (i=0; i<g.pacman.length; i++) {
         getGridCenter(g.pacman.pos[i][1],g.pacman.pos[i][0],cent);
@@ -1378,7 +1278,7 @@ void render(void)
             glPopMatrix();
         }
     }
-    
+    // draw red fruit/big pellets
     for (i= 0; i<5; i++){
     	if( g.bigPellets[i].status ==1){
     		getGridCenter(g.bigPellets[i].pos[1],g.bigPellets[i].pos[0],cent);
