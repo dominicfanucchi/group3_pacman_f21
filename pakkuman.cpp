@@ -506,15 +506,15 @@ void deletePellets() {
     }
     int x_pos = 0;
     int pellet_deleted = 737;
-    int update_pellet = 48;
+    int update_pellet_pos = 48;
     do {
     	for(int i=0; i<9; i++) {
     		g.pellets[pellet_deleted+i].status = 0;
         }
         x_pos++;
-        pellet_deleted = update_pellet + pellet_deleted;
+        pellet_deleted = update_pellet_pos + pellet_deleted;
 
-    } while(x_pos <= 12);
+    } while(x_pos <= 13);
 
 }
 
