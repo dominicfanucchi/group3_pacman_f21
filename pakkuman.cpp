@@ -1126,7 +1126,7 @@ void physics(void)
             g.score++;
             g.pellets[i].status = 0;
         }
-
+    /*
         //new position for rat...
         int collision=0;
         int ntries=0;
@@ -1143,8 +1143,37 @@ void physics(void)
             if (++ntries > 1000000) break;
         }
         return;
-        }
+        
+    
+*/
     }
+    }
+    for (i=0; i<5; i++){
+    if (headpos[0] == g.bigPellets[i].pos[0] && headpos[1] == g.bigPellets[i].pos[1]) {
+            
+            if( g.bigPellets[i].status ==1){
+        
+            g.bigPellets[i].status = 0;
+         }
+
+        //new position for rat...
+        int collision=0;
+        int ntries=0;
+        while (1) {
+            collision=0;
+            for (i=0; i<g.pacman.length; i++) {
+                if (g.bigPellets[0].pos[0] == g.pacman.pos[i][0] &&
+                    g.bigPellets[0].pos[1] == g.pacman.pos[i][1]) {
+                    collision=1;
+                    break;
+                }
+            }
+            if (!collision) break;
+            if (++ntries > 1000000) break;
+        }
+        return;
+        }
+    }       
 }
 
 extern void show_dominics_credits(int x, int y);

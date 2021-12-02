@@ -105,6 +105,97 @@ void makePathHorizontal(int yPos, int xStart, int index)
 */
 
 
+// Very janky movement detection, would do this better if i had the chance to again.
+
+/* 
+         case DIRECTION_UP:
+                                if(isValidVert(g.pacman.pos[0][0])){
+                                  g.pacman.pos[0][1] -=1;
+                                  g.a=-5;
+                                  g.s=-5;
+                                  g.d=-5;
+                                  g.f=43;
+                                  g.g=43;
+                                  g.h=43;
+                                  g.q=-5;
+                                  g.w=43;
+                                  g.e = -5;
+                                  g.r = 43;
+                                  vertWalls(g.pacman.pos[0][0]);
+                                  if((g.pacman.pos[0][1] == g.a) || (g.pacman.pos[0][1] == g.s) || (g.pacman.pos[0][1] == g.d)
+                                            || (g.pacman.pos[0][1] == g.f) ||(g.pacman.pos[0][1] == g.g) ||(g.pacman.pos[0][1] == g.h)
+                                            ||  (g.pacman.pos[0][1] == g.q)|| (g.pacman.pos[0][1] == g.w) || (g.pacman.pos[0][1] == g.e)
+                                            || (g.pacman.pos[0][1] == g.r))
+                                            g.pacman.pos[0][1] +=1;
+                              }
+                              break;
+
+        case DIRECTION_DOWN:
+                              if(isValidHor(g.pacman.pos[0][1])){
+                                  g.pacman.pos[0][0] +=1;
+                                  g.a=-5;
+                                  g.s=-5;
+                                  g.d=43;
+                                  g.f=43;
+                                  g.g=-5;
+                                  g.h=43;
+                                  g.q=-5;
+                                  g.w=43;
+                                  horWalls(g.pacman.pos[0][1]);
+                                if (g.pacman.pos[0][0] == 38 && g.pacman.pos[0][1] == 17)
+                                    g.pacman.pos[0][0] = -3;
+                                if((g.pacman.pos[0][0] == g.a) || (g.pacman.pos[0][0] == g.s) || (g.pacman.pos[0][0] == g.d)
+                                             || (g.pacman.pos[0][0] == g.f) ||(g.pacman.pos[0][0] == g.g) ||(g.pacman.pos[0][0] == g.h)
+                                             ||  (g.pacman.pos[0][0] == g.q)|| (g.pacman.pos[0][0] == g.w))
+                                             g.pacman.pos[0][0] -=1;
+                              }
+                              break;
+    }
+
+        case DIRECTION_UP:
+                                if(isValidVert(g.pacman.pos[0][0])){
+                                  g.pacman.pos[0][1] -=1;
+                                  g.a=-5;
+                                  g.s=-5;
+                                  g.d=-5;
+                                  g.f=43;
+                                  g.g=43;
+                                  g.h=43;
+                                  g.q=-5;
+                                  g.w=43;
+                                  g.e = -5;
+                                  g.r = 43;
+                                  vertWalls(g.pacman.pos[0][0]);
+                                  if((g.pacman.pos[0][1] == g.a) || (g.pacman.pos[0][1] == g.s) || (g.pacman.pos[0][1] == g.d)
+                                            || (g.pacman.pos[0][1] == g.f) ||(g.pacman.pos[0][1] == g.g) ||(g.pacman.pos[0][1] == g.h)
+                                            ||  (g.pacman.pos[0][1] == g.q)|| (g.pacman.pos[0][1] == g.w) || (g.pacman.pos[0][1] == g.e)
+                                            || (g.pacman.pos[0][1] == g.r))
+                                            g.pacman.pos[0][1] +=1;
+                              }
+                              break;
+
+        case DIRECTION_LEFT:
+                              if(isValidHor(g.pacman.pos[0][1])){
+                                  g.pacman.pos[0][0] +=1;
+                                  g.a=-5;
+                                  g.s=-5;
+                                  g.d=43;
+                                  g.f=43;
+                                  g.g=-5;
+                                  g.h=43;
+                                  g.q=-5;
+                                  g.w=43;
+                                  horWalls(g.pacman.pos[0][1]);
+                                if (g.pacman.pos[0][0] == 38 && g.pacman.pos[0][1] == 17)
+                                    g.pacman.pos[0][0] = -3;
+                                if((g.pacman.pos[0][0] == g.a) || (g.pacman.pos[0][0] == g.s) || (g.pacman.pos[0][0] == g.d)
+                                             || (g.pacman.pos[0][0] == g.f) ||(g.pacman.pos[0][0] == g.g) ||(g.pacman.pos[0][0] == g.h)
+                                             ||  (g.pacman.pos[0][0] == g.q)|| (g.pacman.pos[0][0] == g.w))
+                                             g.pacman.pos[0][0] -=1;
+                              }
+                              break;
+    }
+*/
 
 int toggleCredits(int credits)
 {
