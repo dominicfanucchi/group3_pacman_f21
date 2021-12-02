@@ -183,6 +183,7 @@ struct Global {
     int gridDim;
     Pac pacman;
     Pellet pellets[2020];
+    Pellet bigPellets[4];
     Wall vertPaths[100];
     Wall horPaths[100];
     int a,s,d,f,g,h,q,w,e,r,t,y;
@@ -484,6 +485,13 @@ void drawPellets(int a, int b, int p,int d)
         }
 }
 
+void drawBigPellets(int a, int p, int d) {
+        
+        g.bigPellets[0+a].status =1;
+        g.bigPellets[0+a].pos[0] = p;
+        g.bigPellets[0+a].pos[1] = d;
+    
+}
 void initPellets()
 {     
         int count = -2;
@@ -498,8 +506,15 @@ void initPellets()
                 count++;
         }
         while(count <= 39);
-	deletePellets();
+	    deletePellets();
+
+       drawBigPellets(0, -1, -4);
+       drawBigPellets(1, 39, -4);
+       drawBigPellets(2, -1, 39);
+       drawBigPellets(3, 39, 39);
+       drawBigPellets(4, 19, 32);
 }
+
 
 // Juan'work
 // This funcition would be use
@@ -520,7 +535,7 @@ void deletePellets() {
     		g.pellets[pellet_deleted+i].status = 0;
         }
         x_pos++;
-        ellet_deleted = update_pellet + pellet_deleted;
+        pellet_deleted = update_pellet + pellet_deleted;
     } while(x_pos <= 12);
 }
 
@@ -1042,6 +1057,8 @@ int i;
                                   g.h=43;
                                   g.q=-5;
                                   g.w=43;
+                                  g.e = -5;
+                                  g.r = 43;
                                   vertWalls(g.pacman.pos[0][0]);
                                   if((g.pacman.pos[0][1] == g.a) || (g.pacman.pos[0][1] == g.s) || (g.pacman.pos[0][1] == g.d)
                                            || (g.pacman.pos[0][1] == g.f) ||(g.pacman.pos[0][1] == g.g) ||(g.pacman.pos[0][1] == g.h)
@@ -1089,6 +1106,8 @@ int i;
                                   g.h=43;
                                   g.q=-5;
                                   g.w=43;
+                                  g.e = -5;
+                                  g.r = 43;
                                   vertWalls(g.pacman.pos[0][0]);
                                   if((g.pacman.pos[0][1] == g.a) || (g.pacman.pos[0][1] == g.s) || (g.pacman.pos[0][1] == g.d)
                                            || (g.pacman.pos[0][1] == g.f) ||(g.pacman.pos[0][1] == g.g) ||(g.pacman.pos[0][1] == g.h)
@@ -1340,11 +1359,26 @@ void render(void)
     glEnd();
 
     //draw pellets...
+    
 
     for (i= 0; i<2020; i++){
     	if( g.pellets[i].status ==1){
     		getGridCenter(g.pellets[i].pos[1],g.pellets[i].pos[0],cent);
             glColor3f(1.0, 1.0f, 0.0f);
+            glBegin(GL_QUADS);
+             	glVertex2i(cent[0]-4, cent[1]-3);
+                glVertex2i(cent[0]-4, cent[1]+4);
+                glVertex2i(cent[0]+3, cent[1]+4);
+                glVertex2i(cent[0]+3, cent[1]-3);
+            glEnd();
+            glPopMatrix();
+        }
+    }
+    
+    for (i= 0; i<5; i++){
+    	if( g.bigPellets[i].status ==1){
+    		getGridCenter(g.bigPellets[i].pos[1],g.bigPellets[i].pos[0],cent);
+            glColor3f(1.0, 0.0f, 0.0f);
             glBegin(GL_QUADS);
              	glVertex2i(cent[0]-4, cent[1]-3);
                 glVertex2i(cent[0]-4, cent[1]+4);
