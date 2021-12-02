@@ -374,6 +374,11 @@ int main(int argc, char *argv[])
             //7. Reduce the countdown by our physics-rate
             physicsCountdown -= physicsRate;
         }
+        if(g.score == 496) {
+           g.winner = 1;
+           g.gameover =1;
+        }
+
 	mainDisplay();
         //Always render every frame.
 	if(main_game){
@@ -1229,38 +1234,7 @@ void render(void)
     glEnd();
     
      
-     // draw Pacman
-    float c[3]={1.0f,1.0,0.5};
-    float rgb[3];
-    rgb[0] = -0.9 / (float)g.pacman.length;
-    rgb[2] = -0.45 / (float)g.pacman.length;
-    glColor3fv(c);
     
-    glBegin(GL_QUADS);
-    for (i=0; i<g.pacman.length; i++) {
-        getGridCenter(g.pacman.pos[i][1],g.pacman.pos[i][0],cent);
-        glVertex2i(cent[0]-4, cent[1]-3);
-        glVertex2i(cent[0]-4, cent[1]+4);
-        glVertex2i(cent[0]+3, cent[1]+4);
-        glVertex2i(cent[0]+3, cent[1]-3);
-        c[0] += rgb[0];
-        c[2] += rgb[2];
-        glColor3fv(c);
-    }
-    glEnd();
-   
-
-    glColor3f(0.1f, 0.8f, 0.1f);
-    glBegin(GL_QUADS);
-    for (i=0; i<g.pacman.length; i++) {
-        getGridCenter(g.pacman.pos[i][1],g.pacman.pos[i][0],cent);
-        glVertex2i(cent[0]-4, cent[1]-3);
-        glVertex2i(cent[0]-4, cent[1]+4);
-        glVertex2i(cent[0]+3, cent[1]+4);
-        glVertex2i(cent[0]+3, cent[1]-3);
-        glColor3f(0.0f, 0.6f, 0.0f);
-    }
-    glEnd();
 
     //draw pellets...
     
@@ -1292,11 +1266,45 @@ void render(void)
             glPopMatrix();
         }
     }
+     // draw Pacman
+    float c[3]={1.0f,1.0,0.5};
+    float rgb[3];
+    rgb[0] = -0.9 / (float)g.pacman.length;
+    rgb[2] = -0.45 / (float)g.pacman.length;
+    glColor3fv(c);
+    
+    glBegin(GL_QUADS);
+    for (i=0; i<g.pacman.length; i++) {
+        getGridCenter(g.pacman.pos[i][1],g.pacman.pos[i][0],cent);
+        glVertex2i(cent[0]-4, cent[1]-3);
+        glVertex2i(cent[0]-4, cent[1]+4);
+        glVertex2i(cent[0]+3, cent[1]+4);
+        glVertex2i(cent[0]+3, cent[1]-3);
+        c[0] += rgb[0];
+        c[2] += rgb[2];
+        glColor3fv(c);
+    }
+    glEnd();
+   
 
+    glColor3f(0.1f, 0.8f, 0.1f);
+    glBegin(GL_QUADS);
+    for (i=0; i<g.pacman.length; i++) {
+        getGridCenter(g.pacman.pos[i][1],g.pacman.pos[i][0],cent);
+        glVertex2i(cent[0]-4, cent[1]-3);
+        glVertex2i(cent[0]-4, cent[1]+4);
+        glVertex2i(cent[0]+3, cent[1]+4);
+        glVertex2i(cent[0]+3, cent[1]-3);
+        glColor3f(0.0f, 0.6f, 0.0f);
+    }
+    glEnd(); 
     r.left   = g.xres/2;
     r.bot    = g.yres-100;
     r.center = 1;
     ggprint16(&r, 16, 0x00ffffff, "score: %d", g.score);
+    if (g.winner ==1)
+     ggprint16(&r, 16, 0x002134ff, "Congrats, you win!");
+ 
 
     //========================
     // Render the tile system
