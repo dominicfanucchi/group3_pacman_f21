@@ -5,14 +5,14 @@
 #include <time.h>
 #include <math.h>
 #include <X11/Xlib.h>
-//#include <X11/Xutil.h>
-//#include <GL/gl.h>
-//#include <GL/glu.h>
+#include "fonts.h"
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include "log.h"
 //#include "ppm.h"
-#include "fonts.h"
+//#include <X11/Xutil.h>
+//#include <GL/gl.h>
+//#include <GL/glu.h>
 
 #define USE_OPENAL_SOUND
 #ifdef USE_OPENAL_SOUND
@@ -28,12 +28,10 @@ using namespace std;
 
 //macros
 #define rnd() (double)rand()/(double)RAND_MAX
-
 #define DIRECTION_DOWN  0
 #define DIRECTION_LEFT  1
 #define DIRECTION_UP    2
 #define DIRECTION_RIGHT 3
-//
 #define MAX_GRID 80
 typedef struct t_grid {
     int status;
@@ -53,7 +51,7 @@ typedef struct t_pacman {
     double timer;
     double delay;
 } Pac;
-//
+
 typedef struct t_pellet {
     int status;
     int pos[2];
@@ -316,7 +314,6 @@ int quitGame();
 void drawPellets(int,int,int,int);
 void deletePellets();
 
-
 //Setup timers
 const double physicsRate = 1.0 / 60.0;
 const double oobillion = 1.0 / 1e9;
@@ -488,28 +485,20 @@ void drawPellets(int a, int b, int p,int d)
 }
 
 void initPellets()
-{
-       
+{     
         int count = -2;
         int update = 0;
         int column = 48;
         int x = -4;
         do{
-
                 drawPellets(update,column,count,x);
                 update = update + 48;
                 column = column + 48;
                 x = x - 48;
                 count++;
-
         }
         while(count <= 39);
-
 	deletePellets();
-
-
-
-
 }
 
 // Juan'work
@@ -519,34 +508,25 @@ void initPellets()
 // nature of how we pollulated the the pellets
 // in the map. We could possibly also find a more
 // efficent way to do it faster.
-void deletePellets(){
-
-
-        for(int i=0; i<48; i++){
-
-                g.pellets[i].status = 0;
+void deletePellets() {
+    for(int i=0; i<48; i++) {
+        g.pellets[i].status = 0;
+    }
+    int x_pos = 0;
+    int pellet_deleted = 737;
+    int update_pellet = 48;
+    do {
+    	for(int i=0; i<9; i++) {
+    		g.pellets[pellet_deleted+i].status = 0;
         }
-
-
-        int x_pos = 0;
-        int pellet_deleted = 737;
-        int update_pellet = 48;
-
-        do{
-                        for(int i=0; i<9; i++){
-
-                                g.pellets[pellet_deleted+i].status = 0;
-                        }
-                        x_pos++;
-                        pellet_deleted = update_pellet + pellet_deleted;
-
-        }while(x_pos <= 12);
-
+        x_pos++;
+        ellet_deleted = update_pellet + pellet_deleted;
+    } while(x_pos <= 12);
 }
 
 
 
- int isValidHor(int y)
+int isValidHor(int y)
 {
         switch(y){
 case -4:
@@ -1360,39 +1340,25 @@ void render(void)
     glEnd();
 
     //draw pellets...
-    //draw pellets...
 
     for (i= 0; i<2020; i++){
-
-
-
-            if( g.pellets[i].status ==1){
-
-						
-                    getGridCenter(g.pellets[i].pos[1],g.pellets[i].pos[0],cent);
-                    
-                    glColor3f(1.0, 1.0f, 0.0f);
-                 
-                    glBegin(GL_QUADS);
-                     	glVertex2i(cent[0]-4, cent[1]-3);
-                        glVertex2i(cent[0]-4, cent[1]+4);
-                        glVertex2i(cent[0]+3, cent[1]+4);
-                        glVertex2i(cent[0]+3, cent[1]-3);
-                    glEnd();
-                    glPopMatrix();
-                }
+    	if( g.pellets[i].status ==1){
+    		getGridCenter(g.pellets[i].pos[1],g.pellets[i].pos[0],cent);
+            glColor3f(1.0, 1.0f, 0.0f);
+            glBegin(GL_QUADS);
+             	glVertex2i(cent[0]-4, cent[1]-3);
+                glVertex2i(cent[0]-4, cent[1]+4);
+                glVertex2i(cent[0]+3, cent[1]+4);
+                glVertex2i(cent[0]+3, cent[1]-3);
+            glEnd();
+            glPopMatrix();
+        }
     }
 
-    
-    //
-    //
     r.left   = g.xres/2;
     r.bot    = g.yres-100;
     r.center = 1;
     ggprint16(&r, 16, 0x00ffffff, "score: %d", g.score);
-
-
-
 
     //========================
     // Render the tile system

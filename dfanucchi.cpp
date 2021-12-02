@@ -2,18 +2,17 @@
 //author: Dominic Fanucchi
 //date: September 2021
 
+//#include "dfanucchi.h"
 #include "fonts.h"
 #include <X11/Xlib.h>
 #include <GL/glx.h>
 #include <iostream>
-//#include "dfanucchi.h"
 #define USE_OPENAL_SOUND
 #ifdef USE_OPENAL_SOUND
 #include </usr/include/AL/alut.h>
 #endif //USE_OPENAL_SOUND
 
 using namespace std;
-
 unsigned int maze_tex;
 
 void show_dominics_credits(int x, int y)
@@ -35,8 +34,8 @@ struct credits_screen
     }
 } c;
 
-
-void credit_screen(int x, int y){
+void credit_screen(int x, int y)
+{
     glViewport(0, 0, c.x, c.y);
     
     //clear color buffer
