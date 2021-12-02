@@ -652,11 +652,102 @@ void horWalls(int y)
             g.s = 40;
             break;
     
-    }
-   // makePathHorizontal(27, 6, 50,37);
-   
-   // makePathVertical(7, 0, 50);
-     
+ }
+}
+void vertWalls(int x){
+    switch(x){
+        case 7:
+            g.a =-5;
+            g.s = 38;
+            g.d = 43;
+            break;
+        case 32:
+            g.a =-5;
+            g.s = 38;
+            g.d = 43;
+            break;
+        case -1:
+            g.a = 43;
+            g.s = 36;
+            g.d = 33;
+            g.f = 26;
+            g.g = 18;
+            g.h = 16;
+            g.q = -5;
+            break;
+        case 39: 
+            g.a = 43;
+            g.s = 36;
+            g.d = 33;
+            g.f = 26;
+            g.g = 18;
+            g.h = 16;
+            g.q = -5;
+            break;
+        case 12:
+            g.a = 8;
+            g.s = 1;
+            g.d = -3;
+            g.f = -5;
+            g.g = 11;
+            g.h = 29;
+            g.q = 31;
+            g.w = 39;
+            g.e = 41;
+            g.r = 43;
+            break;
+        case 27:
+            g.a = 8;
+            g.s = 1;
+            g.d = -3;
+            g.f = -5;
+            g.g = 11;
+            g.h = 29;
+            g.q = 31;
+            g.w = 39;
+            g.e = 41;
+            g.r = 43;
+            break;
+        case 21: 
+            g.a = 36;
+            g.s = 33;
+            g.d = 26;
+            g.f = 23;
+            g.g = 21;
+            g.h = 13;
+            g.q = 11;
+            g.w = 4;
+            g.e = 2;
+            break;
+        case 17: 
+            g.a = 36;
+            g.s = 33;
+            g.d = 26;
+            g.f = 23;
+            g.g = 21;
+            g.h = 13;
+            g.q = 11;
+            g.w = 4;
+            g.e = 2;
+            break;
+        case 37: 
+            g.a = 31;
+            g.s = 28;
+            g.d = 38;
+            g.f = 41;
+            g.g = 43;
+            g.h = -5;
+            break;
+        case 2: 
+            g.a = 31;
+            g.s = 28;
+            g.d = 38;
+            g.f = 41;
+            g.g = 43;
+            g.h = -5;
+            break;
+ }
+
   
   /* 
     int l = 101;
@@ -956,28 +1047,30 @@ int i;
     //1=left
     //2=up
     //3=right
-    //Kenneths work, dear god i don't want to take credit for it though
+    //Kenneths work, this is ugly.
     //
     switch (g.pacman.direction) {
         case DIRECTION_DOWN:  if(isValidVert(g.pacman.pos[0][0])){
                                     g.pacman.pos[0][1] +=1;
-                                 //   if(g.pacman.pos[0][1] == -2){
-                                   //     g.pacman.pos[0][1] -=1;
-                               // }
+                                  g.a=-5;
+                                  g.s=-5;
+                                  g.d=-5;
+                                  g.f=43;
+                                  g.g=43;
+                                  g.h=43;
+                                  g.q=-5;
+                                  g.w=43;
+                                  vertWalls(g.pacman.pos[0][0]);
+                                  if((g.pacman.pos[0][1] == g.a) || (g.pacman.pos[0][1] == g.s) || (g.pacman.pos[0][1] == g.d)
+                                           || (g.pacman.pos[0][1] == g.f) ||(g.pacman.pos[0][1] == g.g) ||(g.pacman.pos[0][1] == g.h)
+                                         ||  (g.pacman.pos[0][1] == g.q)|| (g.pacman.pos[0][1] == g.w) || (g.pacman.pos[0][1] == g.e) 
+                                         || (g.pacman.pos[0][1] == g.r))
+                                    g.pacman.pos[0][1] -=1;
                               }
                               break;
 
-                            /*
-                              g.pacman.pos[0][1] += 1;
-                              for(int i = 0; i<100; i++){
-                              if((g.pacman.pos[0][1] != g.vertPaths[i].pos[0][1])
-                                  && (g.pacman.pos[0][0] != g.vertPaths[i].pos[0][0])){
-                                  g.pacman.pos[0][1] -= 1;
-                                  break;
-                              }
-                              }
-                              break;
-                             */ 
+
+                          
                               
         case DIRECTION_LEFT:  if(isValidHor(g.pacman.pos[0][1])){
                                   g.pacman.pos[0][0] -=1;
@@ -997,38 +1090,29 @@ int i;
                               }
                               break;
     
-                               /*
-                              g.pacman.pos[0][0] -= 1;
-                              for(int i = 0; i<37; i++){
-                              if((g.pacman.pos[0][0] != g.horPaths[i].pos[0][0])
-                                    && (g.pacman.pos[0][1] != g.horPaths[i].pos[0][1])){
-                                  g.pacman.pos[0][0] +=1;
-                                    break;
-                              }
-                              }
-                               break;
-                               */
+
                               
         case DIRECTION_UP:    
                                 if(isValidVert(g.pacman.pos[0][0])){
-                                    g.pacman.pos[0][1] -=1;
-                                //    if(g.pacman.pos[0][1] == -2){
-                                  //      g.pacman.pos[0][1] +=1;
-                              //  }
+                                  g.pacman.pos[0][1] -=1;
+                                   
+                                  g.a=-5;
+                                  g.s=-5;
+                                  g.d=-5;
+                                  g.f=43;
+                                  g.g=43;
+                                  g.h=43;
+                                  g.q=-5;
+                                  g.w=43;
+                                  vertWalls(g.pacman.pos[0][0]);
+                                  if((g.pacman.pos[0][1] == g.a) || (g.pacman.pos[0][1] == g.s) || (g.pacman.pos[0][1] == g.d)
+                                           || (g.pacman.pos[0][1] == g.f) ||(g.pacman.pos[0][1] == g.g) ||(g.pacman.pos[0][1] == g.h)
+                                         ||  (g.pacman.pos[0][1] == g.q)|| (g.pacman.pos[0][1] == g.w) || (g.pacman.pos[0][1] == g.e) 
+                                         || (g.pacman.pos[0][1] == g.r))
+                                    g.pacman.pos[0][1] +=1;
                               }
-                                break;
-                              /*
-                               g.pacman.pos[0][1] -= 1;
-                              for(int i = 0; i<100; i++){
-                              if((g.pacman.pos[0][1] != g.vertPaths[i].pos[0][1])
-                                      && g.pacman.pos[0][0] != g.vertPaths[i].pos[0][0]){
-                                  g.pacman.pos[0][1] += 1;
-                              
-                                break;
-                              }
-                              } 
                               break;
-                              */
+
         case DIRECTION_RIGHT: 
                               if(isValidHor(g.pacman.pos[0][1])){
                                   g.pacman.pos[0][0] +=1;
@@ -1047,42 +1131,10 @@ int i;
                                     g.pacman.pos[0][0] -=1;
                               }
                               break;
-                                /*
-                               *
-                              g.pacman.pos[0][0] += 1; 
-                              for(int i =0; i<37; i++){                                 
-                              if((g.pacman.pos[0][0] != g.horPaths[i].pos[0][0])){
-                                //&& (g.pacman.pos[0][1] != g.horPaths[i].pos[0][1])){
-                                  g.pacman.pos[0][0] -= 1;
-                                break;
-                              }
-                              }
-                              break;
-                                */
+
 
     }
-    //check for snake off board...
-    /*
-    if (g.pacman.pos[0][0] < -2 ||
-        g.pacman.pos[0][0] > g.gridDim-1 ||
-        g.pacman.pos[0][1] < -4 ||
-        g.pacman.pos[0][1] > g.gridDim+4) {
-        g.gameover=1;
-        return;
-        
-    }
-    */
-    /*
-    //check for snake crossing itself...
-    for (i=1; i<g.snake.length; i++) {
-        if (g.snake.pos[i][0] == g.snake.pos[0][0] &&
-            g.snake.pos[i][1] == g.snake.pos[0][1]) {
-            g.gameover=1;
-            return;
-        }
-    }
-    */
-    //
+
     newpos[0] = headpos[0];
     newpos[1] = headpos[1];
     for (i=1; i<g.pacman.length; i++) {
