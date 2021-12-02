@@ -520,8 +520,8 @@ void deletePellets() {
     		g.pellets[pellet_deleted+i].status = 0;
         }
         x_pos++;
-        ellet_deleted = update_pellet + pellet_deleted;
-    } while(x_pos <= 12);
+        pellet_deleted = update_pellet + pellet_deleted;
+    } while(x_pos <= 13);
 }
 
 
