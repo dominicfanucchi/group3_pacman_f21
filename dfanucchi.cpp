@@ -137,3 +137,31 @@ void playSound(ALuint source)
     alSourcePlay(source);
     #endif //USE_OPENAL_SOUND
 }
+
+int getHighScore()
+{
+    int highScore;
+    fstream scoreFile("high_score.txt"); // Open a stream to the high score file
+    if(scoreFile.good()) { // If the file exists get the value from inside
+        scoreFile >> highScore;
+        scoreFile.close();
+        return highScore; // Return the score
+    } else { 
+        std::ofstream highScoreFile("high_score.txt"); // Create the file
+        highScoreFile << 0; // Pass in the highscore of 0
+        scoreFile.close();
+        highScoreFile.close();
+    }
+    return 0; // Return 0 as the file hadnt previously existed
+}
+
+void setHighScore(int score)
+{
+    int currentHigh = getHighScore(); // Store the current high score
+    if(currentHigh < score) { // Only update the high score if the current score is higher than the previous
+        ofstream highFile("high_score.txt");
+        highFile.clear();
+        highFile << score;
+        highFile.close();
+    }
+}
