@@ -52,6 +52,15 @@ typedef struct t_pacman {
     double delay;
 } Pac;
 
+typedef struct t_ghost
+{
+	int status;
+	int length;
+	int route;
+	double time;
+	double delay;
+} Ghost;
+
 typedef struct t_pellet {
     int status;
     int pos[2];
@@ -182,6 +191,7 @@ struct Global {
     Grid grid[MAX_GRID][MAX_GRID];
     int gridDim;
     Pac pacman;
+    Ghost ghost;
     Pellet pellets[2020];
     Pellet bigPellets[4];
     Wall vertPaths[100];
@@ -321,11 +331,15 @@ struct timespec timeStart, timeCurrent;
 struct timespec timePause;
 double physicsCountdown = 0.0;
 double timeSpan = 0.0;
-double timeDiff(struct timespec *start, struct timespec *end) {
+
+double timeDiff(struct timespec *start, struct timespec *end) 
+{
     return (double)(end->tv_sec - start->tv_sec ) +
             (double)(end->tv_nsec - start->tv_nsec) * oobillion;
 }
-void timeCopy(struct timespec *dest, struct timespec *source) {
+
+void timeCopy(struct timespec *dest, struct timespec *source) 
+{
     memcpy(dest, source, sizeof(struct timespec));
 }
 
@@ -382,8 +396,7 @@ int main(int argc, char *argv[])
 	mainDisplay();
         //Always render every frame.
 	if(main_game){
-
-        	render();
+    	render();
 	}
         x11.swapBuffers();
     }
@@ -426,70 +439,66 @@ void initOpengl(void)
     //              0, GL_RGB, GL_UNSIGNED_BYTE, g.marbleImage->data);
 }
 
+// Dominics work, modeled after Pacman to create a ghost in a corner of the map
+void initGhost()
+{
+	g.ghost.status = 1;
+	g.ghost.length = 1;
+}
 
-
-
-// Kenneths work, translated snake to pacman and rats to pellets for 
-// our game
-
+// Kenneths work, translated snake to pacman and rats to pellets for our game
 void initPacman()
 {
     int i;
     g.pacman.status = 1;
     g.pacman.delay = .15;
     g.pacman.length = 1;
-    
     for (i=0; i<g.pacman.length; i++) {
         g.pacman.pos[i][0] = 2;
         g.pacman.pos[i][1] = 2;
     }
-    
     g.pacman.direction = DIRECTION_RIGHT;
-
 }
+
 // Also Kenneth's work
 // Juan Also contributed to this function
-//
 void drawPellets(int a, int b, int p,int d)
 {
-
-        for(int i = a; i < b; i++){
-
-                g.pellets[i].status = 1;
-                g.pellets[i].pos[0] = p;
-                g.pellets[i].pos[1] =d+i;
-
-        }
+    for(int i = a; i < b; i++){
+        g.pellets[i].status = 1;
+        g.pellets[i].pos[0] = p;
+        g.pellets[i].pos[1] =d+i;
+    }
 }
 
-void drawBigPellets(int a, int p, int d) {
-        
-        g.bigPellets[0+a].status =1;
-        g.bigPellets[0+a].pos[0] = p;
-        g.bigPellets[0+a].pos[1] = d;
-    
+void drawBigPellets(int a, int p, int d) 
+{
+    g.bigPellets[0+a].status =1;
+    g.bigPellets[0+a].pos[0] = p;
+    g.bigPellets[0+a].pos[1] = d;
 }
+
 void initPellets()
 {     
-        int count = -2;
-        int update = 0;
-        int column = 48;
-        int x = -4;
-        do{
-                drawPellets(update,column,count,x);
-                update = update + 48;
-                column = column + 48;
-                x = x - 48;
-                count++;
-        }
-        while(count <= 39);
-	    deletePellets();
+	int count = -2;
+    int update = 0;
+    int column = 48;
+    int x = -4;
+    do {
+        drawPellets(update,column,count,x);
+        update = update + 48;
+        column = column + 48;
+        x = x - 48;
+        count++;
+    }
+    while(count <= 39);
+    deletePellets();
 
-       drawBigPellets(0, -1, -4);
-       drawBigPellets(1, 39, -4);
-       drawBigPellets(2, -1, 39);
-       drawBigPellets(3, 39, 39);
-       drawBigPellets(4, 19, 32);
+    drawBigPellets(0, -1, -4);
+    drawBigPellets(1, 39, -4);
+    drawBigPellets(2, -1, 39);
+    drawBigPellets(3, 39, 39);
+    drawBigPellets(4, 19, 32);
 }
 
 
@@ -506,21 +515,19 @@ void deletePellets() {
     }
     int x_pos = 0;
     int pellet_deleted = 737;
-    int update_pellet = 48;
+    int update_pellet_pos = 48;
     do {
     	for(int i=0; i<9; i++) {
     		g.pellets[pellet_deleted+i].status = 0;
         }
         x_pos++;
-        pellet_deleted = update_pellet + pellet_deleted;
+        pellet_deleted = update_pellet_pos + pellet_deleted;
 
-    } while(x_pos <= 12);
-
+    } while(x_pos <= 13);
 }
 
 //Tests to see if a value is valid as a horizontal
 //row to move on. Kenneth's work
-
 bool isValidHor(int y)
 {
         switch(y){
@@ -640,7 +647,6 @@ void horWalls(int y)
 }
 
 //List of vertical walls
-
 void vertWalls(int x){
     switch(x){
         case 7:
@@ -734,6 +740,7 @@ void vertWalls(int x){
             break;
  }  
 }
+
 void init()
 {
     g.boardDim = g.gridDim * 10.0;
@@ -816,6 +823,7 @@ void init()
 void resetGame()
 {
     initPacman();
+    initGhost();
     initPellets();
     g.score = 0;
     g.gameover = 0;
@@ -959,8 +967,7 @@ void getGridCenter(const int i, const int j, int cent[2])
 
 void physics(void)
 {
-    
-int i;
+	int i;
     if (g.gameover)
         return;
     //Is it time to move the snake?
@@ -969,7 +976,6 @@ int i;
     if (firsttime) {
         firsttime=0;
         clock_gettime(CLOCK_REALTIME, &snakeTime);
-
      }
     struct timespec tt;
     clock_gettime(CLOCK_REALTIME, &tt);
@@ -977,8 +983,6 @@ int i;
     if (timeSpan < g.pacman.delay)
         return;
     timeCopy(&snakeTime, &tt);
-    //
-    //playSound(g.alSourceDrip);
     //move the snake segments...
     int headpos[2];
     int newpos[2];
@@ -1084,8 +1088,6 @@ int i;
                                              g.pacman.pos[0][0] -=1;
                               }
                               break;
-
-
     }
 
     newpos[0] = headpos[0];
@@ -1104,7 +1106,6 @@ int i;
     
 
     //did pacman eat pellet?
-    
     for (i=0; i <2020; i++){
         if (headpos[0] == g.pellets[i].pos[0] && headpos[1] == g.pellets[i].pos[1]) {
             //yes, increase length of snake.
@@ -1112,14 +1113,12 @@ int i;
             if( g.pellets[i].status ==1){
             g.score++;
             g.pellets[i].status = 0;
-            }
+        }
 
-        
         //new position for rat...
         int collision=0;
         int ntries=0;
         while (1) {
-           
             collision=0;
             for (i=0; i<g.pacman.length; i++) {
                 if (g.pellets[0].pos[0] == g.pacman.pos[i][0] &&
@@ -1128,20 +1127,13 @@ int i;
                     break;
                 }
             }
-
             if (!collision) break;
             if (++ntries > 1000000) break;
-
-
         }
-     
         return;
-
-
         }
     }
 }
-
 
 extern void show_dominics_credits(int x, int y);
 extern void show_andrew_credits(int x, int y);
@@ -1233,12 +1225,7 @@ void render(void)
         glVertex2i(s0+b2, s1-(b2+50));
     glEnd();
     
-     
-    
-
     //draw pellets...
-    
-
     for (i= 0; i<2020; i++){
     	if( g.pellets[i].status ==1){
     		getGridCenter(g.pellets[i].pos[1],g.pellets[i].pos[0],cent);
@@ -1266,6 +1253,10 @@ void render(void)
             glPopMatrix();
         }
     }
+
+    // draw purple ghost
+
+
      // draw Pacman
     float c[3]={1.0f,1.0,0.5};
     float rgb[3];
@@ -1351,14 +1342,14 @@ void render(void)
     
     if (g.show_credits) {
         //credit_screen();
-        // r.bot = g.yres -20;
-        // r.left = 10;
-        // r.center = 0;
-        // ggprint8b(&r, 16, 0x00A020F0, "Credits:");
-        // show_dominics_credits(50, g.yres - 50);
-        // show_andrew_credits(50, g.yres - 80);
-        // show_kenneth_credits(50, g.yres - 110);
-        // show_juan_credits(50, g.yres - 140);
+        r.bot = g.yres -20;
+        r.left = 10;
+        r.center = 0;
+        ggprint8b(&r, 16, 0x00A020F0, "Credits:");
+        show_dominics_credits(50, g.yres - 50);
+        show_andrew_credits(50, g.yres - 80);
+        show_kenneth_credits(50, g.yres - 110);
+        show_juan_credits(50, g.yres - 140);
     }
 }
 
