@@ -729,7 +729,6 @@ void vertWalls(int x){
             g.f = 23;
             g.g = 21;
             g.h = 13;
-            g.q = 11;
             g.w = 4;
             g.e = 2;
             break;
@@ -1086,11 +1085,14 @@ int i;
                                   g.q=-5;
                                   g.w=43;
                                   horWalls(g.pacman.pos[0][1]);
+                                  if (g.pacman.pos[0][0] == -3 && g.pacman.pos[0][1] == 17)
+                                     g.pacman.pos[0][0] = 39;
                                   if((g.pacman.pos[0][0] == g.a) || (g.pacman.pos[0][0] == g.s) || (g.pacman.pos[0][0] == g.d)
-                                           || (g.pacman.pos[0][0] == g.f) ||(g.pacman.pos[0][0] == g.g) ||(g.pacman.pos[0][0] == g.h)
-                                         ||  (g.pacman.pos[0][0] == g.q)|| (g.pacman.pos[0][0] == g.w))
-                                    g.pacman.pos[0][0] +=1;
+                                            || (g.pacman.pos[0][0] == g.f) ||(g.pacman.pos[0][0] == g.g) ||(g.pacman.pos[0][0] == g.h)
+                                            ||  (g.pacman.pos[0][0] == g.q)|| (g.pacman.pos[0][0] == g.w))
+                                            g.pacman.pos[0][0] +=1;
                               }
+                                
                               break;
     
 
@@ -1128,6 +1130,8 @@ int i;
                                   g.q=-5;
                                   g.w=43;
                                   horWalls(g.pacman.pos[0][1]);
+                                if (g.pacman.pos[0][0] == 38 && g.pacman.pos[0][1] == 17)
+                                    g.pacman.pos[0][0] = -3;
                                   if((g.pacman.pos[0][0] == g.a) || (g.pacman.pos[0][0] == g.s) || (g.pacman.pos[0][0] == g.d)
                                            || (g.pacman.pos[0][0] == g.f) ||(g.pacman.pos[0][0] == g.g) ||(g.pacman.pos[0][0] == g.h)
                                          ||  (g.pacman.pos[0][0] == g.q)|| (g.pacman.pos[0][0] == g.w))
